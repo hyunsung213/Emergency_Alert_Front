@@ -8,9 +8,7 @@ export default function Home() {
   return (
     <View style={styles.color}>
       <Text>재난 및 대피소</Text>
-      <View style={styles.container}>
-        <Maps />
-      </View>
+      <View style={styles.container}>{/* <Maps /> */}</View>
     </View>
   );
 }

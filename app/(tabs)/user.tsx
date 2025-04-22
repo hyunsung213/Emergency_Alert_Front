@@ -1,9 +1,30 @@
-import { Text, View } from "react-native";
+// Example usage in your main app layout or screen
+import React from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
+import DisasterMessage from "@/components/DisasterMessage";
+import DisasterAlert from "@/components/DisasterAlert";
+import { useNavigation } from "@react-navigation/native";
+import { DisasterAlertItem } from "@/lib/api/\bdisasterAlertAPI";
 
-export default function User() {
+const HomeScreen = () => {
+  const navigation = useNavigation();
+
   return (
-    <View>
-      <Text>User</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      {/* Message bar at the top */}
+      <DisasterMessage maxMessages={10} autoScrollInterval={7000} />
+    </SafeAreaView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F7",
+  },
+  content: {
+    flex: 1,
+  },
+});
+
+export default HomeScreen;

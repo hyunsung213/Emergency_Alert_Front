@@ -38,6 +38,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="weather"
+        options={{
+          title: "Weather",
+          tabBarIcon: ({ color }) => (
+            <AntDesign size={28} name="cloud" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="disaster"
+        options={{
+          title: "Disaster",
+          tabBarIcon: ({ color }) => (
+            <AntDesign size={28} name="warning" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: "Home",
