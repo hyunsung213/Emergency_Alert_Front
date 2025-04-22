@@ -13,7 +13,7 @@ import {
   DisasterAlertItem,
   getDisasterAlerts,
   getDisasterAlertsByRegion,
-} from "@/lib/api/\bdisasterAlertAPI";
+} from "@/lib/api/disasterAlertAPI";
 
 const DisasterAlert = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(

@@ -11,7 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import {
   DisasterAlertItem,
   getDisasterAlerts,
-} from "@/lib/api/\bdisasterAlertAPI";
+} from "@/lib/api/disasterAlertAPI";
 
 interface DisasterMessageProps {
   maxMessages?: number;
