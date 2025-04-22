@@ -2,32 +2,32 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useState } from "react";
-import { IEarthquakeShelter } from "@/lib/api/interfaces/earthquakeShelter";
-import { getEarthquakeShelter } from "@/lib/api/interfaces/get";
-
-const sample_data = [
-  {
-    fclt_nm: "동작고등학교 운동장",
-    mng_dept_nm: "070-4629-6407",
-    se_nm: "지진실내구호소",
-    ctpv_nm: "서울특별시",
-    lot: "126.9655",
-    fcar: "3246.0",
-    se: 1,
-    shlt_id: 1,
-    daddr: "서울특별시 동작구 솔밭로 51(사당동)",
-    sgg_nm: "동작구",
-    lat: "37.482",
-  },
-];
+import {
+  IColdWaveShelter,
+  IDustShelter,
+  IEarthquakeShelter,
+  IHeatShelter,
+} from "@/lib/api/interfaces/shelter";
+import {
+  getColdWaveShelter,
+  getDustShelter,
+  getEarthquakeShelter,
+  getHeatShelter,
+} from "@/lib/api/interfaces/get";
+import { Picker } from "@react-native-picker/picker";
 
 export default function Maps() {
-  const [info, setInfo] = useState<IEarthquakeShelter[]>([]);
+  const [earthquake, setEarthquake] = useState<IEarthquakeShelter[]>([]);
+  const [heat, setHeat] = useState<IHeatShelter[]>([]);
+  const [cold, setcold] = useState<IColdWaveShelter[]>([]);
+  const [dust, setDust] = useState<IDustShelter[]>([]);
+
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [emergency, setEmergency] = useState<string>("earthquake");
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -54,20 +54,33 @@ export default function Maps() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const a = await getEarthquakeShelter({
+        const loc_earthquake = await getEarthquakeShelter({
           lon: location?.coords.longitude || 0,
           lat: location?.coords.latitude || 0,
         });
-        setInfo(a.data);
+        const loc_heat = await getHeatShelter({
+          lon: location?.coords.longitude || 0,
+          lat: location?.coords.latitude || 0,
+        });
+        const loc_cold = await getColdWaveShelter({
+          lon: location?.coords.longitude || 0,
+          lat: location?.coords.latitude || 0,
+        });
+        const loc_dust = await getDustShelter({
+          lon: location?.coords.longitude || 0,
+          lat: location?.coords.latitude || 0,
+        });
+
+        setEarthquake(loc_earthquake.data);
+        setHeat(loc_heat.data);
+        setcold(loc_cold.data);
+        setDust(loc_dust.data);
       } catch (error) {
         console.error("Error fetching earthquake shelter data:", error);
       }
     };
-
     fetchData();
   }, []);
-
-  console.log(info);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -79,6 +92,14 @@ export default function Maps() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Picker
+        ref={pickerRef}
+        selectedValue={selectedLanguage}
+        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
+      >
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
       <MapView
         provider={PROVIDER_GOOGLE}
         initialRegion={{
@@ -90,8 +111,9 @@ export default function Maps() {
         zoomEnabled={true}
         style={styles.map}
       >
-        {info?.length > 0 &&
-          info?.map((element) => (
+        {/* Show Earthquake Shelter */}
+        {earthquake.length > 0 &&
+          earthquake?.map((element) => (
             <Marker
               key={element.shlt_id}
               draggable
@@ -102,9 +124,66 @@ export default function Maps() {
               onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
               title={element.fclt_nm}
               description={element.se_nm}
-              pinColor="yellow"
+              image={require("../assets/images/shelter.png")}
+              style={styles.marker}
             />
           ))}
+
+        {/* Show Heatwave Shelter*/}
+
+        {heat.length > 0 &&
+          heat?.map((element) => (
+            <Marker
+              // key={elemen}
+              draggable
+              coordinate={{
+                latitude: Number(element.lat),
+                longitude: Number(element.lot),
+              }}
+              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
+              title={element.restarea_nm}
+              description={element.rmrk}
+              image={require("../assets/images/umbrella.png")}
+              style={styles.marker}
+            />
+          ))}
+
+        {/* Show Coldwave Shelter*/}
+
+        {cold.length > 0 &&
+          cold?.map((element) => (
+            <Marker
+              key={element.sno}
+              draggable
+              coordinate={{
+                latitude: Number(element.lat),
+                longitude: Number(element.lot),
+              }}
+              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
+              title={element.restarea_nm}
+              description={element.fclt_type}
+              image={require("../assets/images/campfire.png")}
+              style={styles.marker}
+            />
+          ))}
+
+        {/* Show Dust Shelter*/}
+        {dust.length > 0 &&
+          dust?.map((element) => (
+            <Marker
+              key={element.sno}
+              draggable
+              coordinate={{
+                latitude: Number(element.lat),
+                longitude: Number(element.lot),
+              }}
+              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
+              title={element.fclt_nm}
+              description={element.rmrk}
+              image={require("../assets/images/mask.png")}
+            />
+          ))}
+
         <Marker
           draggable
           coordinate={{
@@ -114,18 +193,8 @@ export default function Maps() {
           onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
           title={"현재위치"}
           description={"맞을껄?"}
-          pinColor="yellow"
-        />
-
-        <Marker
-          draggable
-          coordinate={{
-            latitude: Number(sample_data[0].lat),
-            longitude: Number(sample_data[0].lot),
-          }}
-          onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
-          title={sample_data[0].fclt_nm}
-          description={sample_data[0].se_nm}
+          pinColor="#4b4453"
+          style={styles.marker}
         />
       </MapView>
     </View>
@@ -138,5 +207,10 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  marker: {
+    width: 3,
+    height: 3,
+    justifyContent: "center",
   },
 });

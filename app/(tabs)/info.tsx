@@ -1,4 +1,4 @@
-import { IEarthquakeShelter } from "@/lib/api/interfaces/earthquakeShelter";
+import { IEarthquakeShelter } from "@/lib/api/interfaces/shelter";
 import { getEarthquakeShelter } from "@/lib/api/interfaces/get";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
