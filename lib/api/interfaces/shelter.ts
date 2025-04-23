@@ -8,12 +8,12 @@ export interface IEarthquakeOutdoorShelter {
   daddr?: string; // 상세주소
   xcrd?: string; // X좌표
   ctpv_nm?: string; // 시도명
-  lat: number; // 위도
+  lat?: number; // 위도
   fcar?: string; // 시설면적
   sgg_nm?: string; // 시군구명
   actc_fclt_nm?: string; // 수용시설명
   ycrd?: string; // Y좌표
-  lot: number; // 경도
+  lot?: number; // 경도
 }
 
 export interface IEarthquakeShelter {
@@ -21,13 +21,13 @@ export interface IEarthquakeShelter {
   mng_dept_nm?: string; // 관리부서
   se_nm?: string; // 구분명 (예: 지진실내구호소)
   ctpv_nm?: string; // 시도명
-  lot: number; // 경도
+  lot?: number; // 경도
   fcar?: string; // 시설면적
   se?: number; // 구분
   shlt_id?: number; // 피난처 ID
   daddr?: string; // 상세주소
   sgg_nm?: string; // 시군구명
-  lat: number; // 위도
+  lat?: number; // 위도
 }
 
 export interface IHeatShelter {
@@ -41,11 +41,11 @@ export interface IHeatShelter {
   lotno_daddr?: string; // 지번주소
   yr?: string; // 연도
   xcrd?: number; // X좌표
-  lot: number; // 경도
+  lot?: number; // 경도
   restarea_nm?: string; // 시설명
   rmrk?: string; // 비고
   oper_bgng_ymd?: string; // 운영시작일
-  lat: number; // 위도
+  lat?: number; // 위도
 }
 
 export interface IDustShelter {
@@ -62,8 +62,8 @@ export interface IDustShelter {
   addr?: string; // 주소
   rmrk?: string; // 비고
   utztn_psblty_nope?: string; // 수용 가능 인원
-  lat: number; // 위도
-  lot: number; // 경도
+  lat?: number; // 위도
+  lot?: number; // 경도
 }
 
 export interface IColdWaveShelter {
@@ -77,8 +77,8 @@ export interface IColdWaveShelter {
   oper_end_ymd?: Date; // 운영종료일
   xcrd?: number; // X좌표
   ycrd?: number; // Y좌표
-  lat: number; // 위도
-  lot: number; // 경도
+  lat?: number; // 위도
+  lot?: number; // 경도
   wd_opn_yn?: string; // 평일 운영 여부
   wd_opn_hrm?: string; // 평일 운영 시작 시간
   wd_end_hrm?: string; // 평일 운영 종료 시간

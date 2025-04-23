@@ -14,13 +14,6 @@ export type Coordinate = {
   lon: Number;
 };
 
-export async function getEarthquakeOutdoorShelter({ lat, lon }: Coordinate) {
-  return await apiClient.get<ListResponse<IEarthquakeOutdoorShelter>>(
-    `/nearby/earthquake-outdoor-shelters?lat=${lat}&lon=${lon}`,
-    {}
-  );
-}
-
 export async function getEarthquakeShelter({ lat, lon }: Coordinate) {
   return await apiClient.get<ListResponse<IEarthquakeShelter>>(
     `/nearby/earthquake-shelters?lat=${lat}&lon=${lon}`,

@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   IColdWaveShelter,
   IDustShelter,
@@ -14,21 +14,19 @@ import {
   getEarthquakeShelter,
   getHeatShelter,
 } from "@/lib/api/interfaces/get";
-import { Picker } from "@react-native-picker/picker";
 
-export default function Maps() {
+export default function Maps({ emergency }: { emergency: string }) {
   const [earthquake, setEarthquake] = useState<IEarthquakeShelter[]>([]);
   const [heat, setHeat] = useState<IHeatShelter[]>([]);
-  const [cold, setcold] = useState<IColdWaveShelter[]>([]);
+  const [cold, setCold] = useState<IColdWaveShelter[]>([]);
   const [dust, setDust] = useState<IDustShelter[]>([]);
-
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [emergency, setEmergency] = useState<string>("earthquake");
 
+  // 현재 위치 가져오기
   useEffect(() => {
     async function getCurrentLocation() {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -39,8 +37,8 @@ export default function Maps() {
       }
 
       try {
-        let loaction_user = await Location.getCurrentPositionAsync({});
-        setLocation(loaction_user);
+        const userLocation = await Location.getCurrentPositionAsync({});
+        setLocation(userLocation);
       } catch (error) {
         setErrorMsg("위치를 불러오는 중 오류가 발생했습니다.");
       } finally {
@@ -51,36 +49,40 @@ export default function Maps() {
     getCurrentLocation();
   }, []);
 
+  // 데이터 가져오기
   useEffect(() => {
+    if (!location) return; // 위치 정보가 없으면 데이터 요청하지 않음
+
     const fetchData = async () => {
       try {
         const loc_earthquake = await getEarthquakeShelter({
-          lon: location?.coords.longitude || 0,
-          lat: location?.coords.latitude || 0,
+          lon: location.coords.longitude,
+          lat: location.coords.latitude,
         });
         const loc_heat = await getHeatShelter({
-          lon: location?.coords.longitude || 0,
-          lat: location?.coords.latitude || 0,
+          lon: location.coords.longitude,
+          lat: location.coords.latitude,
         });
         const loc_cold = await getColdWaveShelter({
-          lon: location?.coords.longitude || 0,
-          lat: location?.coords.latitude || 0,
+          lon: location.coords.longitude,
+          lat: location.coords.latitude,
         });
         const loc_dust = await getDustShelter({
-          lon: location?.coords.longitude || 0,
-          lat: location?.coords.latitude || 0,
+          lon: location.coords.longitude,
+          lat: location.coords.latitude,
         });
 
         setEarthquake(loc_earthquake.data);
         setHeat(loc_heat.data);
-        setcold(loc_cold.data);
+        setCold(loc_cold.data);
         setDust(loc_dust.data);
       } catch (error) {
-        console.error("Error fetching earthquake shelter data:", error);
+        console.error("Error fetching shelter data:", error);
       }
     };
+
     fetchData();
-  }, []);
+  }, [location]);
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -91,110 +93,91 @@ export default function Maps() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Picker
-        ref={pickerRef}
-        selectedValue={selectedLanguage}
-        onValueChange={(itemValue, itemIndex) => setSelectedLanguage(itemValue)}
-      >
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
-      </Picker>
+    <View>
       <MapView
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: Number(location?.coords.latitude),
-          longitude: Number(location?.coords.longitude),
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: location?.coords.latitude || 37.5665, // 기본값: 서울
+          longitude: location?.coords.longitude || 126.978, // 기본값: 서울
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         }}
         zoomEnabled={true}
         style={styles.map}
       >
-        {/* Show Earthquake Shelter */}
+        {/* Earthquake Shelters */}
         {earthquake.length > 0 &&
-          earthquake?.map((element) => (
+          emergency === "earthquake" &&
+          earthquake.map((element) => (
             <Marker
               key={element.shlt_id}
-              draggable
               coordinate={{
                 latitude: Number(element.lat),
                 longitude: Number(element.lot),
               }}
-              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
               title={element.fclt_nm}
               description={element.se_nm}
               image={require("../assets/images/shelter.png")}
-              style={styles.marker}
             />
           ))}
 
-        {/* Show Heatwave Shelter*/}
-
+        {/* Heatwave Shelters */}
         {heat.length > 0 &&
-          heat?.map((element) => (
+          emergency === "heat" &&
+          heat.map((element) => (
             <Marker
-              // key={elemen}
-              draggable
+              key={element.restarea_nm}
               coordinate={{
                 latitude: Number(element.lat),
                 longitude: Number(element.lot),
               }}
-              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
               title={element.restarea_nm}
               description={element.rmrk}
               image={require("../assets/images/umbrella.png")}
-              style={styles.marker}
             />
           ))}
 
-        {/* Show Coldwave Shelter*/}
-
+        {/* Coldwave Shelters */}
         {cold.length > 0 &&
-          cold?.map((element) => (
+          emergency === "cold" &&
+          cold.map((element) => (
             <Marker
               key={element.sno}
-              draggable
               coordinate={{
                 latitude: Number(element.lat),
                 longitude: Number(element.lot),
               }}
-              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
               title={element.restarea_nm}
               description={element.fclt_type}
               image={require("../assets/images/campfire.png")}
-              style={styles.marker}
             />
           ))}
 
-        {/* Show Dust Shelter*/}
+        {/* Dust Shelters */}
         {dust.length > 0 &&
-          dust?.map((element) => (
+          emergency === "dust" &&
+          dust.map((element) => (
             <Marker
               key={element.sno}
-              draggable
               coordinate={{
                 latitude: Number(element.lat),
                 longitude: Number(element.lot),
               }}
-              onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
               title={element.fclt_nm}
               description={element.rmrk}
               image={require("../assets/images/mask.png")}
             />
           ))}
 
+        {/* 현재 위치 */}
         <Marker
-          draggable
           coordinate={{
-            latitude: Number(location?.coords.latitude),
-            longitude: Number(location?.coords.longitude),
+            latitude: location?.coords.latitude || 37.5665,
+            longitude: location?.coords.longitude || 126.978,
           }}
-          onDragEnd={(e) => alert(JSON.stringify(e.nativeEvent.coordinate))}
           title={"현재위치"}
-          description={"맞을껄?"}
+          description={"현재 위치입니다."}
           pinColor="#4b4453"
-          style={styles.marker}
         />
       </MapView>
     </View>
@@ -205,12 +188,5 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  marker: {
-    width: 3,
-    height: 3,
-    justifyContent: "center",
   },
 });
