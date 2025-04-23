@@ -4,7 +4,6 @@ import { View, StyleSheet, SafeAreaView } from "react-native";
 import DisasterMessage from "@/components/DisasterMessage";
 import DisasterAlert from "@/components/DisasterAlert";
 import { useNavigation } from "@react-navigation/native";
-import { DisasterAlertItem } from "@/lib/api/\bdisasterAlertAPI";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
