@@ -57,13 +57,9 @@ export async function getDisasterAlerts(params: DisasterAlertParams) {
   url.searchParams.append("pageNo", pageNo.toString());
   url.searchParams.append("returnType", returnType);
 
-  console.log(crtDt, rgnNm);
-
   // // Add optional parameters only if they are provided
   if (crtDt) url.searchParams.append("crtDt", crtDt);
   if (rgnNm) url.searchParams.append("rgnNm", rgnNm);
-
-  console.log("Disaster Alert API URL:", url.toString());
 
   try {
     const response = await fetch(url.toString());
@@ -99,7 +95,7 @@ export async function getDisasterAlerts(params: DisasterAlertParams) {
 export async function getDisasterAlertsByDate(date: string) {
   return getDisasterAlerts({
     crtDt: date,
-    numOfRows: 50, // 더 많은 결과를 가져오기 위해 기본값보다 큰 값 설정
+    numOfRows: 10, // 더 많은 결과를 가져오기 위해 기본값보다 큰 값 설정
   });
 }
 
@@ -115,7 +111,7 @@ export async function getDisasterAlertsByRegion(
 ) {
   return getDisasterAlerts({
     rgnNm: regionName,
-    numOfRows: 50, // 더 많은 결과를 가져오기 위해 기본값보다 큰 값 설정
+    numOfRows: 10, // 더 많은 결과를 가져오기 위해 기본값보다 큰 값 설정
     crtDt: date,
   });
 }

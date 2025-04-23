@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
@@ -14,8 +15,14 @@ import {
   getDisasterAlerts,
   getDisasterAlertsByRegion,
 } from "@/lib/api/disasterAlertAPI";
+import { useLanguage } from "@/contexts/LanguageContext";
+import {
+  TranslatedTextView,
+  TranslatedText,
+} from "@/components/ui/TranslatedText";
 
 const DisasterAlert = () => {
+  const { t, effectiveLanguage } = useLanguage();
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -23,13 +30,21 @@ const DisasterAlert = () => {
   const [loading, setLoading] = useState(true);
   const [disasterAlerts, setDisasterAlerts] = useState<DisasterAlertItem[]>([]);
   const [regionName, setRegionName] = useState<string>("");
+  const [showTranslations, setShowTranslations] = useState(
+    effectiveLanguage !== "ko"
+  );
 
   // Get current location
   useEffect(() => {
     async function getCurrentLocation() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("위치 권한에 대한 승인이 누락되었습니다.");
+        setErrorMsg(
+          t(
+            "locationPermissionDenied",
+            "위치 권한에 대한 승인이 누락되었습니다."
+          )
+        );
         setLoading(false);
         return;
       }
@@ -60,14 +75,21 @@ const DisasterAlert = () => {
           setRegionName(regionQuery);
         }
       } catch (error) {
-        setErrorMsg("위치를 불러오는 중 오류가 발생했습니다.");
+        setErrorMsg(
+          t("locationError", "위치를 불러오는 중 오류가 발생했습니다.")
+        );
       } finally {
         setLoading(false);
       }
     }
 
     getCurrentLocation();
-  }, []);
+  }, [t]);
+
+  // When language changes, update translation preference
+  useEffect(() => {
+    setShowTranslations(effectiveLanguage !== "ko");
+  }, [effectiveLanguage]);
 
   // Fetch disaster alerts when region is determined
   useEffect(() => {
@@ -126,7 +148,9 @@ const DisasterAlert = () => {
         setDisasterAlerts(alerts || []);
       } catch (error) {
         console.error("Failed to fetch disaster alerts:", error);
-        setErrorMsg("재난 경보를 불러오는데 실패했습니다.");
+        setErrorMsg(
+          t("alertFetchError", "재난 경보를 불러오는데 실패했습니다.")
+        );
       } finally {
         setLoading(false);
       }
@@ -157,15 +181,32 @@ const DisasterAlert = () => {
 
     const type = disasterType.toLowerCase();
 
-    if (type.includes("지진")) return "public";
-    if (type.includes("호우") || type.includes("홍수")) return "water";
-    if (type.includes("태풍")) return "cyclone";
-    if (type.includes("산불") || type.includes("화재"))
+    if (type.includes("지진") || type.includes("earthquake")) return "public";
+    if (
+      type.includes("호우") ||
+      type.includes("홍수") ||
+      type.includes("rain") ||
+      type.includes("flood")
+    )
+      return "water";
+    if (type.includes("태풍") || type.includes("typhoon")) return "cyclone";
+    if (type.includes("산불") || type.includes("화재") || type.includes("fire"))
       return "local-fire-department";
-    if (type.includes("폭염")) return "wb-sunny";
-    if (type.includes("한파")) return "ac-unit";
-    if (type.includes("코로나") || type.includes("감염")) return "coronavirus";
-    if (type.includes("안전") || type.includes("대피")) return "warning";
+    if (type.includes("폭염") || type.includes("heat")) return "wb-sunny";
+    if (type.includes("한파") || type.includes("cold")) return "ac-unit";
+    if (
+      type.includes("코로나") ||
+      type.includes("감염") ||
+      type.includes("covid") ||
+      type.includes("infectious")
+    )
+      return "coronavirus";
+    if (
+      type.includes("안전") ||
+      type.includes("대피") ||
+      type.includes("safety")
+    )
+      return "warning";
 
     return "notifications-active"; // Default icon
   };
@@ -176,9 +217,12 @@ const DisasterAlert = () => {
 
     const emergencyLevel = level.toLowerCase();
 
-    if (emergencyLevel.includes("위급")) return "#ff3b30";
-    if (emergencyLevel.includes("긴급")) return "#ff9500";
-    if (emergencyLevel.includes("안전")) return "#34c759";
+    if (emergencyLevel.includes("위급") || emergencyLevel.includes("emergency"))
+      return "#ff3b30";
+    if (emergencyLevel.includes("긴급") || emergencyLevel.includes("warning"))
+      return "#ff9500";
+    if (emergencyLevel.includes("안전") || emergencyLevel.includes("safety"))
+      return "#34c759";
 
     return "#007aff"; // Default blue
   };
@@ -195,7 +239,11 @@ const DisasterAlert = () => {
           />
         </View>
         <View style={styles.headerText}>
-          <Text style={styles.alertType}>{item.DST_SE_NM || "재난 알림"}</Text>
+          <Text style={styles.alertType}>
+            {item.DST_SE_NM
+              ? t(item.DST_SE_NM, item.DST_SE_NM)
+              : t("notification", "재난 알림")}
+          </Text>
           <Text style={styles.alertDate}>{formatDate(item.CRT_DT)}</Text>
         </View>
         <View
@@ -204,15 +252,39 @@ const DisasterAlert = () => {
             { backgroundColor: getEmergencyColor(item.EMRG_STEP_NM) },
           ]}
         >
-          <Text style={styles.levelText}>{item.EMRG_STEP_NM || "알림"}</Text>
+          <Text style={styles.levelText}>
+            {item.EMRG_STEP_NM
+              ? t(item.EMRG_STEP_NM, item.EMRG_STEP_NM)
+              : t("notice", "알림")}
+          </Text>
         </View>
       </View>
 
-      <Text style={styles.alertContent}>{item.MSG_CN}</Text>
+      {/* Alert content with translation */}
+      {showTranslations && effectiveLanguage !== "ko" ? (
+        <TranslatedTextView
+          text={item.MSG_CN}
+          style={styles.alertContent}
+          showToggle={true}
+        />
+      ) : (
+        <Text style={styles.alertContent}>{item.MSG_CN}</Text>
+      )}
 
       <View style={styles.alertFooter}>
         <Text style={styles.regionText}>
-          지역: {item.RCPTN_RGN_NM || "전국"}
+          {t("region", "지역")}: {/* Region with translation */}
+          {showTranslations && effectiveLanguage !== "ko" ? (
+            <TranslatedText
+              text={item.RCPTN_RGN_NM || t("nationwide", "전국")}
+              style={styles.regionValue}
+              numberOfLines={1}
+            />
+          ) : (
+            <Text style={styles.regionValue}>
+              {item.RCPTN_RGN_NM || t("nationwide", "전국")}
+            </Text>
+          )}
         </Text>
       </View>
     </TouchableOpacity>
@@ -223,7 +295,9 @@ const DisasterAlert = () => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>재난 경보를 불러오는 중...</Text>
+        <Text style={styles.loadingText}>
+          {t("loadingAlerts", "재난 경보를 불러오는 중...")}
+        </Text>
       </View>
     );
   }
@@ -235,7 +309,10 @@ const DisasterAlert = () => {
         <MaterialIcons name="error-outline" size={48} color="#ff3b30" />
         <Text style={styles.errorText}>{errorMsg}</Text>
         <Text style={styles.subText}>
-          앱을 다시 시작하시거나 인터넷 연결을 확인해주세요.
+          {t(
+            "errorSubtext",
+            "앱을 다시 시작하시거나 인터넷 연결을 확인해주세요."
+          )}
         </Text>
       </View>
     );
@@ -246,10 +323,16 @@ const DisasterAlert = () => {
     return (
       <View style={styles.container}>
         <MaterialIcons name="notifications-none" size={64} color="#8e8e93" />
-        <Text style={styles.emptyText}>현재 활성화된 재난 경보가 없습니다</Text>
+        <Text style={styles.emptyText}>
+          {t("noActiveAlerts", "현재 활성화된 재난 경보가 없습니다")}
+        </Text>
         <Text style={styles.subText}>
-          {regionName ? `${regionName} 지역에` : "전국에"} 활성화된 재난 경보가
-          없습니다.
+          {regionName
+            ? t(
+                "noRegionalAlerts",
+                `${regionName} 지역에 활성화된 재난 경보가 없습니다.`
+              )
+            : t("noNationalAlerts", "전국에 활성화된 재난 경보가 없습니다.")}
         </Text>
       </View>
     );
@@ -258,8 +341,12 @@ const DisasterAlert = () => {
   // Main view with alerts
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>재난 경보</Text>
-      {regionName && <Text style={styles.regionTitle}>{regionName} 지역</Text>}
+      <Text style={styles.title}>{t("disasterAlerts", "재난 경보")}</Text>
+      {regionName && (
+        <Text style={styles.regionTitle}>
+          {regionName} {t("region", "지역")}
+        </Text>
+      )}
 
       <FlatList
         data={disasterAlerts}
@@ -289,8 +376,37 @@ const styles = StyleSheet.create({
   regionTitle: {
     fontSize: 16,
     color: "#666",
-    marginBottom: 16,
+    marginBottom: 8,
     alignSelf: "flex-start",
+  },
+  toggleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingVertical: 8,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e6e6e6",
+  },
+  toggleLabel: {
+    fontSize: 16,
+    color: "#333",
+  },
+  translationLoadingBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    width: "100%",
+    backgroundColor: "#f0f8ff",
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  translationLoadingText: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: "#0066cc",
   },
   listContainer: {
     paddingBottom: 20,
@@ -306,6 +422,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 3,
+    width: "100%",
   },
   alertHeader: {
     flexDirection: "row",
@@ -355,6 +472,10 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   regionText: {
+    fontSize: 14,
+    color: "#666",
+  },
+  regionValue: {
     fontSize: 14,
     color: "#666",
   },

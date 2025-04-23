@@ -1,5 +1,4 @@
 import WeatherScreen from "@/components/Weather";
-import { IEarthquakeShelter } from "@/lib/api/interfaces/earthquakeShelter";
 import { getEarthquakeShelter } from "@/lib/api/interfaces/get";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
