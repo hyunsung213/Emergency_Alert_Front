@@ -65,8 +65,6 @@ export async function getWeatherData(params: WeatherParams) {
   url.searchParams.append("nx", nx.toString());
   url.searchParams.append("ny", ny.toString());
 
-  console.log("URL:", url.toString());
-
   const response = await fetch(url.toString());
 
   if (!response.ok) {

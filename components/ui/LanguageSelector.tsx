@@ -9,7 +9,8 @@ import {
   SafeAreaView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language } from "@/lib/api/papagoAPI";
 
 interface LanguageSelectorProps {
   compact?: boolean;
