@@ -1,4 +1,5 @@
 import apiClient from "./apiClient";
+import { IEmergencyRoom } from "./emergencyRoom";
 
 import {
   IColdWaveShelter,
@@ -38,6 +39,13 @@ export async function getDustShelter({ lat, lon }: Coordinate) {
 export async function getColdWaveShelter({ lat, lon }: Coordinate) {
   return await apiClient.get<ListResponse<IColdWaveShelter>>(
     `/nearby/coldwave-shelters?lat=${lat}&lon=${lon}`,
+    {}
+  );
+}
+
+export async function getEmergencyRoom({ lat, lon }: Coordinate) {
+  return await apiClient.get<ListResponse<IEmergencyRoom>>(
+    `/nearby/emergency-rooms?lat=${lat}&lon=${lon}`,
     {}
   );
 }

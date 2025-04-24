@@ -12,14 +12,17 @@ import {
   getColdWaveShelter,
   getDustShelter,
   getEarthquakeShelter,
+  getEmergencyRoom,
   getHeatShelter,
 } from "@/lib/api/interfaces/get";
+import { IEmergencyRoom } from "@/lib/api/interfaces/emergencyRoom";
 
 export default function Maps({ emergency }: { emergency: string }) {
   const [earthquake, setEarthquake] = useState<IEarthquakeShelter[]>([]);
   const [heat, setHeat] = useState<IHeatShelter[]>([]);
   const [cold, setCold] = useState<IColdWaveShelter[]>([]);
   const [dust, setDust] = useState<IDustShelter[]>([]);
+  const [hospital, setHospital] = useState<IEmergencyRoom[]>([]);
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
@@ -71,11 +74,16 @@ export default function Maps({ emergency }: { emergency: string }) {
           lon: location.coords.longitude,
           lat: location.coords.latitude,
         });
+        const loc_hospital = await getEmergencyRoom({
+          lon: location.coords.longitude,
+          lat: location.coords.latitude,
+        });
 
         setEarthquake(loc_earthquake.data);
         setHeat(loc_heat.data);
         setCold(loc_cold.data);
         setDust(loc_dust.data);
+        setHospital(loc_hospital.data);
       } catch (error) {
         console.error("Error fetching shelter data:", error);
       }
@@ -105,6 +113,21 @@ export default function Maps({ emergency }: { emergency: string }) {
         zoomEnabled={true}
         style={styles.map}
       >
+        {/* Emergency Rooms */}
+        {hospital.length > 0 &&
+          hospital.map((element) => (
+            <Marker
+              key={element.hpid}
+              coordinate={{
+                latitude: Number(element.wgs84lat),
+                longitude: Number(element.wgs84lon),
+              }}
+              title={element.dutyname}
+              description={element.dutytel3}
+              image={require("../assets/images/hospitalMarker.png")}
+            />
+          ))}
+
         {/* Earthquake Shelters */}
         {earthquake.length > 0 &&
           emergency === "earthquake" &&
@@ -117,7 +140,7 @@ export default function Maps({ emergency }: { emergency: string }) {
               }}
               title={element.fclt_nm}
               description={element.se_nm}
-              image={require("../assets/images/shelter.png")}
+              image={require("../assets/images/earthquake.png")}
             />
           ))}
 
@@ -133,7 +156,7 @@ export default function Maps({ emergency }: { emergency: string }) {
               }}
               title={element.restarea_nm}
               description={element.rmrk}
-              image={require("../assets/images/umbrella.png")}
+              image={require("../assets/images/heat1.png")}
             />
           ))}
 
@@ -149,7 +172,7 @@ export default function Maps({ emergency }: { emergency: string }) {
               }}
               title={element.restarea_nm}
               description={element.fclt_type}
-              image={require("../assets/images/campfire.png")}
+              image={require("../assets/images/cold.png")}
             />
           ))}
 
@@ -165,7 +188,7 @@ export default function Maps({ emergency }: { emergency: string }) {
               }}
               title={element.fclt_nm}
               description={element.rmrk}
-              image={require("../assets/images/mask.png")}
+              image={require("../assets/images/dust.png")}
             />
           ))}
 
@@ -177,7 +200,7 @@ export default function Maps({ emergency }: { emergency: string }) {
           }}
           title={"현재위치"}
           description={"현재 위치입니다."}
-          pinColor="#4b4453"
+          image={require("../assets/images/gps.png")}
         />
       </MapView>
     </View>

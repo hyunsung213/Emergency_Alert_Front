@@ -21,8 +21,10 @@ export default function Home() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Text style={styles.header}>재난 및 대피소</Text>
-
+      {/* Disaster Message */}
+      <View style={styles.disasterMessageContainer}>
+        <DisasterMessage />
+      </View>
       {/* Picker Section */}
       <View style={styles.pickerContainer}>
         <Picker
@@ -78,6 +80,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 8,
     overflow: "hidden",
+    marginBottom: 50,
+    elevation: 2, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  disasterMessageContainer: {
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    marginBottom: 16, // Picker와 이격
+    padding: 12,
     elevation: 2, // Android shadow
     shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },
