@@ -13,6 +13,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import EmergencyCall from "@/components/EmergencyCall";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,6 +41,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        <EmergencyCall />
         <StatusBar style="auto" />
       </ThemeProvider>
     </LanguageProvider>
