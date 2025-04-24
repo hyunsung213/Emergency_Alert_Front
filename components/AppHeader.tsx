@@ -14,6 +14,7 @@ import { StatusBar } from "expo-status-bar";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import LanguageSelector from "./ui/LanguageSelector";
+import EmergencyCall from "./EmergencyCall";
 
 interface AppHeaderProps {
   title?: string;
@@ -55,14 +56,6 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 
         <View style={styles.rightContainer}>
           {showLanguageSelector && <LanguageSelector compact />}
-          {showSettings && (
-            <TouchableOpacity
-              style={styles.iconButton}
-              //   onPress={() => router.push("/settings")}
-            >
-              <MaterialIcons name="settings" size={24} />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     </SafeAreaView>

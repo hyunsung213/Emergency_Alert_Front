@@ -39,12 +39,12 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   // Render a compact version (just an icon button)
   if (compact) {
     return (
-      <>
+      <View style={styles.iconContainer}>
         <TouchableOpacity
           style={styles.compactButton}
           onPress={() => setModalVisible(true)}
         >
-          <MaterialIcons name="language" size={24} color="#007AFF" />
+          <MaterialIcons name="language" size={24} color="#28a745" />
         </TouchableOpacity>
 
         <LanguageModal
@@ -53,7 +53,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           onSelect={handleSelectLanguage}
           currentLanguage={language}
         />
-      </>
+      </View>
     );
   }
 
@@ -155,6 +155,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
 };
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 8,
+  },
   container: {
     marginVertical: 10,
   },
