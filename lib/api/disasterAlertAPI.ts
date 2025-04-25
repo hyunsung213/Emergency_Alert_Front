@@ -59,7 +59,7 @@ export async function getDisasterAlerts(params: DisasterAlertParams) {
 
   // // Add optional parameters only if they are provided
   if (crtDt) url.searchParams.append("crtDt", crtDt);
-  if (rgnNm) url.searchParams.append("rgnNm", rgnNm);
+  if (rgnNm && rgnNm !== "전국") url.searchParams.append("rgnNm", rgnNm);
 
   try {
     const response = await fetch(url.toString());
