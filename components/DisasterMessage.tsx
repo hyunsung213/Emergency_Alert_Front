@@ -32,7 +32,6 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   const [loading, setLoading] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [modalVisible, setModalVisible] = useState(false); // 모달 상태
-  const intervalRef = useRef<NodeJS.Timeout | null>(null); // 슬라이드 타이머 참조
 
   // Fetch recent disaster alerts
   useEffect(() => {
@@ -84,7 +83,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
     }, autoScrollInterval);
 
     return () => clearInterval(interval);
-  }, [alerts.length, autoScrollInterval, translateX]);
+  }, [alerts.length, autoScrollInterval, translateX, modalVisible]);
 
   // Get emergency color based on alert level
   const getEmergencyColor = (level: string) => {
@@ -182,6 +181,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setModalVisible(false)} // 모달 닫기
+              activeOpacity={1.0}
             >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>

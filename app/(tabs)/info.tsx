@@ -189,6 +189,15 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    marginBottom: 50,
     marginTop: 16,
   },
 });

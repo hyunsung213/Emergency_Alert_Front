@@ -15,7 +15,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
   return (
     <>
       {safety === "gasSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="가스시설 설치 요령"
             items={gasSafetyData.가스시설_설치}
@@ -48,7 +48,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "heatingSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="보일러 안전 사용법"
             items={heatingSafetyData.보일러}
@@ -68,7 +68,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "waterOutageSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="단수 대비 요령"
             items={waterOutageData.단수_대비}
@@ -81,7 +81,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "waterPlaySafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="물놀이 전 준비사항"
             items={waterPlaySafetyData.물놀이_전}
@@ -101,7 +101,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "mountainHikingSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="산행 전 준비사항"
             items={mountainHikingData.산행_전}
@@ -121,7 +121,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "platformSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="승강장 일반 이용 수칙"
             items={platformSafetyData.일반_이용}
@@ -137,7 +137,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "foodPoisoningSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="식중독 예방 3대 요령"
             items={foodPoisoningData.예방}
@@ -169,7 +169,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "foodSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="식품 보관 요령"
             items={foodSafetyData.식품_보관}
@@ -185,7 +185,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "bicycleSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="일반인 자전거 이용 수칙"
             items={bicycleSafetyData.일반인}
@@ -213,7 +213,7 @@ export default function SafetyInfo({ safety }: { safety: string }) {
         </ScrollView>
       )}
       {safety === "electricalSafety" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="전기사고 예방 수칙"
             items={electricalAccidentData.사고_예방}

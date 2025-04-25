@@ -17,7 +17,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
   return (
     <>
       {emergency === "earthquake" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="지진 대비 행동요령"
             items={earthquakeData.지진대비}
@@ -62,7 +62,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "dust" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="미세먼지 일반 대비" items={dustData.일반대비} />
           <InfoSection
             title="미세먼지 특보 시 공통 행동요령"
@@ -86,7 +86,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "heat" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="폭염 대비 요령" items={heatwaveData.대비요령} />
           <InfoSection
             title="폭염 발생 시 - 실내"
@@ -100,7 +100,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "typhoon" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="태풍·호우 대비" items={typhoonData.대비} />
           <InfoSection
             title="태풍·호우 예보 단계 행동요령"
@@ -122,7 +122,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "downpour" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="호우 대비 요령" items={heavyRainData.대비} />
           <InfoSection
             title="호우 발생 시 실내 행동요령"
@@ -144,7 +144,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "windstorm" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="강풍 대비 요령" items={windstormData.강풍대비} />
           <InfoSection
             title="강풍 발생 시 - 실내"
@@ -166,7 +166,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "flood" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="홍수 대비 요령" items={floodData.홍수대비} />
           <InfoSection
             title="홍수 발생 시 실내 행동요령"
@@ -186,7 +186,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "landslide" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="사고 대비 요령" items={landslideData.사고대비} />
           <InfoSection
             title="주의보 발생 시 - 취약지역 주민"
@@ -208,7 +208,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "drought" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="주방 및 세탁 시 물 절약"
             items={droughtData.실내_주방_세탁}
@@ -222,7 +222,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "snowstorm" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="대설 대비 요령" items={snowstormData.대설대비} />
           <InfoSection
             title="대설 발생 시 - 실내"
@@ -245,7 +245,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
       )}
 
       {emergency === "cold" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection title="한파 대비 요령" items={coldWaveData.한파대비} />
           <InfoSection
             title="한파 발생 시 실내 행동요령"
@@ -278,7 +278,7 @@ export default function DisasterInfo({ emergency }: { emergency: string }) {
     )} */}
 
       {emergency === "volcano" && (
-        <ScrollView style={styles.infoContainer}>
+        <ScrollView>
           <InfoSection
             title="화산재 낙하 대비 요령"
             items={volcanoData.화산재_낙하_대비}

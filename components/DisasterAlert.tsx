@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     color: "#0066cc",
   },
   listContainer: {
-    paddingBottom: 20,
+    paddingBottom: 30,
     width: "100%",
   },
   alertCard: {
