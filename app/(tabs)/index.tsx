@@ -41,7 +41,7 @@ export default function Home() {
 
       {/* Map Section */}
       <View style={styles.mapContainer}>
-        {/* <Maps emergency={emergency} /> */}
+        <Maps emergency={emergency} />
       </View>
     </View>
   );

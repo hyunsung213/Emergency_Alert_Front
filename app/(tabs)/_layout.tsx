@@ -46,7 +46,7 @@ export default function TabLayout() {
           options={{
             title: "Weather",
             tabBarIcon: ({ color }) => (
-              <AntDesign size={28} name="cloud" color={color} />
+              <AntDesign size={28} name="cloudo" color={color} />
             ),
           }}
         />
