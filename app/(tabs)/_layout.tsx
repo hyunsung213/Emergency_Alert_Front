@@ -68,15 +68,6 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
-          name="user"
-          options={{
-            title: "User",
-            tabBarIcon: ({ color }) => (
-              <AntDesign size={28} name="user" color={color} />
-            ),
-          }}
-        />
       </Tabs>
     </View>
   );

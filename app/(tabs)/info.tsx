@@ -26,7 +26,7 @@ export default function Info() {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image
-          source={require("../../assets/images/instructions.png")}
+          source={require("../../assets/images/information.png")}
           style={styles.headerIcon}
         />
         <Text style={styles.headerText}>행동요령</Text>
@@ -38,7 +38,7 @@ export default function Info() {
         <View style={styles.pickerContainer}>
           <View style={styles.labelContainer}>
             <Image
-              source={require("../../assets/images/disaster.png")}
+              source={require("../../assets/images/warning.png")}
               style={styles.icon}
             />
             <Text style={styles.pickerLabel}>재난별</Text>
@@ -72,7 +72,7 @@ export default function Info() {
         <View style={styles.pickerContainer}>
           <View style={styles.labelContainer}>
             <Image
-              source={require("../../assets/images/safety.png")}
+              source={require("../../assets/images/security.png")}
               style={styles.icon}
             />
             <Text style={styles.pickerLabel}>안전행동요령별</Text>
@@ -129,9 +129,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerIcon: {
-    width: 32,
-    height: 32,
-    marginRight: 8,
+    width: 24, // 아이콘 크기
+    height: 24,
+    tintColor: "#007AFF", // 아이콘 색상
+    marginRight: 5,
   },
   headerText: {
     fontSize: 24,
@@ -165,9 +166,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   icon: {
-    width: 20,
+    width: 20, // 아이콘 크기
     height: 20,
-    marginRight: 8,
+    tintColor: "#007AFF", // 아이콘 색상
+    marginRight: 5,
   },
   pickerLabel: {
     fontSize: 16,
@@ -187,6 +189,7 @@ const styles = StyleSheet.create({
     height: 52,
     fontSize: 16,
   },
+
   infoContainer: {
     flex: 1,
     backgroundColor: "#ffffff",

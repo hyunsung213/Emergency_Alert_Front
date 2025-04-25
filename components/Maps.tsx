@@ -1,12 +1,13 @@
 import {
   ActivityIndicator,
+  Image,
   Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import {
@@ -23,7 +24,6 @@ import {
   getHeatShelter,
 } from "@/lib/api/interfaces/get";
 import { IEmergencyRoom } from "@/lib/api/interfaces/emergencyRoom";
-import Shelter from "./Shelter";
 
 export default function Maps({ emergency }: { emergency: string }) {
   const [earthquake, setEarthquake] = useState<IEarthquakeShelter[]>([]);
@@ -36,7 +36,16 @@ export default function Maps({ emergency }: { emergency: string }) {
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEarthquakeMarker, setSelectedEarthquakeMarker] =
+    useState<IEarthquakeShelter | null>();
+  const [selectedHeatMarker, setSelectedHeatMarker] =
+    useState<IHeatShelter | null>();
+  const [selectedColdMarker, setSelectedColdMarker] =
+    useState<IColdWaveShelter | null>();
+  const [selectedDustMarker, setSelectedDustMarker] =
+    useState<IDustShelter | null>();
+  const [selectedHospitalMarker, setSelectedHospitalMarker] =
+    useState<IEmergencyRoom | null>();
 
   // 현재 위치 가져오기
   useEffect(() => {
@@ -132,35 +141,8 @@ export default function Maps({ emergency }: { emergency: string }) {
                 longitude: Number(element.wgs84lon),
               }}
               title={element.dutyname}
-              description={element.dutytel3}
               image={require("../assets/images/hospitalMarker.png")}
-              onPress={() => {
-                setModalVisible(true);
-                // Shelter 컴포넌트를 불러오는 로직
-                <>
-                  <Modal
-                    visible={modalVisible}
-                    animationType="slide"
-                    transparent={true}
-                    onRequestClose={() => setModalVisible(false)} // 모달 닫기
-                  >
-                    <View style={styles.modalContainer}>
-                      <View style={styles.modalContent}>
-                        <TouchableOpacity
-                          style={styles.closeButton}
-                          onPress={() => setModalVisible(false)} // 모달 닫기
-                          activeOpacity={1.0}
-                        >
-                          <Text style={styles.closeButtonText}>X</Text>
-                        </TouchableOpacity>
-
-                        <Text style={styles.modalTitle}>재난 정보</Text>
-                        <Shelter />
-                      </View>
-                    </View>
-                  </Modal>
-                </>;
-              }}
+              onPress={() => setSelectedHospitalMarker(element)}
             />
           ))}
 
@@ -174,10 +156,10 @@ export default function Maps({ emergency }: { emergency: string }) {
                 latitude: Number(element.lat),
                 longitude: Number(element.lot),
               }}
-              title={element.fclt_nm}
-              description={element.se_nm}
               image={require("../assets/images/earthquake.png")}
-            />
+              title={element.fclt_nm}
+              onPress={() => setSelectedEarthquakeMarker(element)}
+            ></Marker>
           ))}
 
         {/* Heatwave Shelters */}
@@ -191,8 +173,8 @@ export default function Maps({ emergency }: { emergency: string }) {
                 longitude: Number(element.lot),
               }}
               title={element.restarea_nm}
-              description={element.rmrk}
               image={require("../assets/images/heat1.png")}
+              onPress={() => setSelectedHeatMarker(element)}
             />
           ))}
 
@@ -207,8 +189,8 @@ export default function Maps({ emergency }: { emergency: string }) {
                 longitude: Number(element.lot),
               }}
               title={element.restarea_nm}
-              description={element.fclt_type}
               image={require("../assets/images/cold.png")}
+              onPress={() => setSelectedColdMarker(element)}
             />
           ))}
 
@@ -223,8 +205,8 @@ export default function Maps({ emergency }: { emergency: string }) {
                 longitude: Number(element.lot),
               }}
               title={element.fclt_nm}
-              description={element.rmrk}
               image={require("../assets/images/dust.png")}
+              onPress={() => setSelectedDustMarker(element)}
             />
           ))}
 
@@ -239,6 +221,108 @@ export default function Maps({ emergency }: { emergency: string }) {
           image={require("../assets/images/gps.png")}
         />
       </MapView>
+
+      {selectedEarthquakeMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>
+            {selectedEarthquakeMarker.fclt_nm}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedEarthquakeMarker.se_nm}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedEarthquakeMarker.mng_dept_nm}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedEarthquakeMarker.daddr}
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => setSelectedEarthquakeMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {selectedHeatMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>
+            {selectedHeatMarker.restarea_nm}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedHeatMarker.road_nm_addr}
+          </Text>
+          <Text style={styles.calloutText}>{selectedHeatMarker.rmrk}</Text>
+
+          <TouchableOpacity
+            onPress={() => setSelectedHeatMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {selectedColdMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>
+            {selectedColdMarker.restarea_nm}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedColdMarker.road_nm_addr}
+          </Text>
+          <Text style={styles.calloutText}>{selectedColdMarker.rmrk}</Text>
+
+          <TouchableOpacity
+            onPress={() => setSelectedColdMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {selectedDustMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>{selectedDustMarker.fclt_nm}</Text>
+          <Text style={styles.calloutText}>{selectedDustMarker.fclt_type}</Text>
+          <Text style={styles.calloutText}>{selectedDustMarker.addr}</Text>
+          <Text style={styles.calloutText}>{selectedDustMarker.rmrk}</Text>
+
+          <TouchableOpacity
+            onPress={() => setSelectedDustMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {selectedHospitalMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>
+            {selectedHospitalMarker.dutyname}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedHospitalMarker.dutytel1}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedHospitalMarker.dutyaddr}
+          </Text>
+          <Text style={styles.calloutText}>
+            {selectedHospitalMarker.dutyetc}
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => setSelectedHospitalMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -288,5 +372,28 @@ const styles = StyleSheet.create({
     color: "#333",
     textAlign: "center",
     marginBottom: 16, // 제목과 내용 간격
+  },
+  calloutContainer: {
+    position: "absolute",
+    bottom: 80,
+    left: 20,
+    right: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  calloutTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  calloutText: {
+    fontSize: 12,
+    marginBottom: 2,
   },
 });
