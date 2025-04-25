@@ -8,6 +8,7 @@ import {
 import * as Location from "expo-location";
 import { useCallback, useEffect, useState } from "react";
 import { getWeatherData, WeatherItem } from "@/lib/api/weatherAPI";
+import { MaterialIcons } from "@expo/vector-icons";
 
 // Convert GPS coordinates to grid coordinates for Korean weather API
 function convertToGrid(lat: number, lon: number) {
@@ -103,6 +104,7 @@ const WeatherScreen = () => {
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [regionName, setRegionName] = useState<string>("");
 
   const fetchWeatherData = async () => {
     if (!location) return;
@@ -148,8 +150,30 @@ const WeatherScreen = () => {
       }
 
       try {
-        let loaction_user = await Location.getCurrentPositionAsync({});
-        setLocation(loaction_user);
+        let location_user = await Location.getCurrentPositionAsync({});
+        setLocation(location_user);
+
+        // Get region name from coordinates
+        const geocode = await Location.reverseGeocodeAsync({
+          latitude: location_user.coords.latitude,
+          longitude: location_user.coords.longitude,
+        });
+
+        if (geocode && geocode.length > 0) {
+          // Extract region names for API query
+          const region = geocode[0];
+          let regionQuery = "";
+
+          // Korean APIs typically use administrative areas
+          if (region.region) regionQuery = region.region; // Province/State/City
+          if (region.subregion) {
+            regionQuery = regionQuery
+              ? `${regionQuery} ${region.subregion}`
+              : region.subregion;
+          }
+
+          setRegionName(regionQuery);
+        }
       } catch (error) {
         setErrorMsg(
           "위치를 불러오는 중 오류가 발생했습니다. GPS가 활성화되어 있는지 확인해 주세요."
@@ -371,41 +395,63 @@ const WeatherScreen = () => {
       </View>
 
       <View style={styles.weatherCard}>
+        <View style={styles.locationContainer}>
+          <MaterialIcons name="location-on" size={18} color="#666" />
+          <Text style={styles.locationText}>{regionName}</Text>
+        </View>
+
         <Text style={styles.temperature}>{tmp}°C</Text>
         <Text style={styles.weatherDescription}>{getWeatherDescription()}</Text>
 
         <View style={styles.weatherDetails}>
-          <View style={styles.weatherRow}>
-            <Text style={styles.label}>최저/최고:</Text>
-            <Text style={styles.value}>
-              {tmn !== "N/A" ? tmn : "--"}°C / {tmx !== "N/A" ? tmx : "--"}°C
-            </Text>
-          </View>
+          <View style={styles.weatherDetailsGrid}>
+            {/* 습도 (Humidity) box */}
+            <View style={styles.weatherBox}>
+              <View style={styles.boxIconContainer}>
+                <MaterialIcons name="opacity" size={24} color="#4A90E2" />
+              </View>
+              <Text style={styles.boxTitle}>습도</Text>
+              <Text style={styles.boxValue}>
+                {reh !== "N/A" ? reh : "--"}
+                <Text style={styles.boxUnit}>%</Text>
+              </Text>
+            </View>
 
-          <View style={styles.weatherRow}>
-            <Text style={styles.label}>습도:</Text>
-            <Text style={styles.value}>{reh !== "N/A" ? reh : "--"}%</Text>
-          </View>
+            {/* 최저/최고 (Min/Max Temperature) box */}
+            <View style={styles.weatherBox}>
+              <View style={styles.boxIconContainer}>
+                <MaterialIcons name="thermostat" size={24} color="#FF9500" />
+              </View>
+              <Text style={styles.boxTitle}>최저/최고</Text>
+              <Text style={styles.boxValue}>
+                {tmn !== "N/A" ? tmn : "--"}/{tmx !== "N/A" ? tmx : "--"}
+                <Text style={styles.boxUnit}>°C</Text>
+              </Text>
+            </View>
 
-          <View style={styles.weatherRow}>
-            <Text style={styles.label}>강수확률:</Text>
-            <Text style={styles.value}>{pop}%</Text>
-          </View>
+            {/* 강수확률 (Precipitation Probability) box */}
+            <View style={styles.weatherBox}>
+              <View style={styles.boxIconContainer}>
+                <MaterialIcons name="umbrella" size={24} color="#34C759" />
+              </View>
+              <Text style={styles.boxTitle}>강수확률</Text>
+              <Text style={styles.boxValue}>
+                {pop}
+                <Text style={styles.boxUnit}>%</Text>
+              </Text>
+            </View>
 
-          <View style={styles.weatherRow}>
-            <Text style={styles.label}>풍속:</Text>
-            <Text style={styles.value}>{wsd} m/s</Text>
-          </View>
-
-          <View style={styles.weatherRow}>
-            <Text style={styles.label}>풍향:</Text>
-            <Text style={styles.value}>
-              {vec && vec !== "0"
-                ? getWindDirectionFromVec(vec)
-                : uuu && vvv
-                ? getWindDirection(parseFloat(uuu), parseFloat(vvv))
-                : "정보 없음"}
-            </Text>
+            {/* 풍속 (Wind Speed) box */}
+            <View style={styles.weatherBox}>
+              <View style={styles.boxIconContainer}>
+                <MaterialIcons name="air" size={24} color="#AF52DE" />
+              </View>
+              <Text style={styles.boxTitle}>풍속</Text>
+              <Text style={styles.boxValue}>
+                {wsd}
+                <Text style={styles.boxUnit}>m/s</Text>
+              </Text>
+            </View>
           </View>
 
           {pcp && pcp !== "0" && (
@@ -590,11 +636,54 @@ const styles = StyleSheet.create({
   weatherDetails: {
     marginTop: 10,
   },
+  weatherDetailsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  weatherBox: {
+    width: "48%",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 16,
+    padding: 15,
+    marginBottom: 16,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.05)",
+  },
+  boxIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "rgba(240, 240, 240, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  boxTitle: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 5,
+  },
+  boxValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  boxUnit: {
+    fontSize: 16,
+    fontWeight: "normal",
+    color: "#666",
+  },
   weatherRow: {
     flexDirection: "row",
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
   },
   label: {
     fontSize: 18,
@@ -611,6 +700,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     marginBottom: 10,
+  },
+  locationContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 15,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.05)",
+  },
+  locationText: {
+    fontSize: 14,
+    color: "#555",
+    marginLeft: 5,
+    fontWeight: "500",
   },
 });
 

@@ -91,7 +91,6 @@ const DisasterAlert = () => {
   const handleRegionChange = (region: string) => {
     setManualRegionSelection(true);
     setRegionName(region);
-    console.log(region);
   };
 
   // When language changes, update translation preference
