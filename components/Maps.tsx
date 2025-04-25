@@ -76,6 +76,7 @@ export default function Maps({ emergency }: { emergency: string }) {
 
     const fetchData = async () => {
       try {
+        //TODO: API 요청을 비동기로 처리하여 성능 개선
         const loc_earthquake = await getEarthquakeShelter({
           lon: location.coords.longitude,
           lat: location.coords.latitude,
