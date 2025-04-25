@@ -67,27 +67,30 @@ export default function Maps({ emergency }: { emergency: string }) {
 
     const fetchData = async () => {
       try {
-        //TODO: API 요청을 비동기로 처리하여 성능 개선
-        const loc_earthquake = await getEarthquakeShelter({
-          lon: location.coords.longitude,
-          lat: location.coords.latitude,
-        });
-        const loc_heat = await getHeatShelter({
-          lon: location.coords.longitude,
-          lat: location.coords.latitude,
-        });
-        const loc_cold = await getColdWaveShelter({
-          lon: location.coords.longitude,
-          lat: location.coords.latitude,
-        });
-        const loc_dust = await getDustShelter({
-          lon: location.coords.longitude,
-          lat: location.coords.latitude,
-        });
-        const loc_hospital = await getEmergencyRoom({
-          lon: location.coords.longitude,
-          lat: location.coords.latitude,
-        });
+        // API 요청을 병렬로 처리하여 성능 개선
+        const [loc_earthquake, loc_heat, loc_cold, loc_dust, loc_hospital] =
+          await Promise.all([
+            getEarthquakeShelter({
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            }),
+            getHeatShelter({
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            }),
+            getColdWaveShelter({
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            }),
+            getDustShelter({
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            }),
+            getEmergencyRoom({
+              lon: location.coords.longitude,
+              lat: location.coords.latitude,
+            }),
+          ]);
 
         setEarthquake(loc_earthquake.data);
         setHeat(loc_heat.data);
