@@ -20,6 +20,7 @@ import {
   TranslatedTextView,
   TranslatedText,
 } from "@/components/ui/TranslatedText";
+import RegionPicker from "./RegionPicker";
 
 const DisasterAlert = () => {
   const { t, effectiveLanguage } = useLanguage();
@@ -33,6 +34,7 @@ const DisasterAlert = () => {
   const [showTranslations, setShowTranslations] = useState(
     effectiveLanguage !== "ko"
   );
+  const [manualRegionSelection, setManualRegionSelection] = useState(false);
 
   // Get current location
   useEffect(() => {
@@ -86,6 +88,12 @@ const DisasterAlert = () => {
     getCurrentLocation();
   }, [t]);
 
+  const handleRegionChange = (region: string) => {
+    setManualRegionSelection(true);
+    setRegionName(region);
+    console.log(region);
+  };
+
   // When language changes, update translation preference
   useEffect(() => {
     setShowTranslations(effectiveLanguage !== "ko");
@@ -94,7 +102,7 @@ const DisasterAlert = () => {
   // Fetch disaster alerts when region is determined
   useEffect(() => {
     async function fetchDisasterAlerts() {
-      if (!regionName) return;
+      if (!regionName && !manualRegionSelection) return;
 
       try {
         setLoading(true);
@@ -108,41 +116,41 @@ const DisasterAlert = () => {
         // First try to get regional alerts
         let alerts = await getDisasterAlertsByRegion(regionName, todayStr);
 
-        // If no regional alerts, get recent nationwide alerts
-        if (!alerts || alerts.length === 0) {
-          // Get recent dates in YYYYMMDD format (today and past 6 days)
-          const dates = [];
-          for (let i = 0; i < 7; i++) {
-            const date = new Date();
-            date.setDate(date.getDate() - i);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const day = String(date.getDate()).padStart(2, "0");
-            dates.push(`${year}${month}${day}`);
-          }
+        // // If no regional alerts, get recent nationwide alerts
+        // if (!alerts || alerts.length === 0) {
+        //   // Get recent dates in YYYYMMDD format (today and past 6 days)
+        //   const dates = [];
+        //   for (let i = 0; i < 7; i++) {
+        //     const date = new Date();
+        //     date.setDate(date.getDate() - i);
+        //     const year = date.getFullYear();
+        //     const month = String(date.getMonth() + 1).padStart(2, "0");
+        //     const day = String(date.getDate()).padStart(2, "0");
+        //     dates.push(`${year}${month}${day}`);
+        //   }
 
-          // Try to get alerts for each day, starting with today
-          for (const dateStr of dates) {
-            const dateAlerts = await getDisasterAlerts({
-              numOfRows: 10,
-              pageNo: 1,
-              crtDt: dateStr,
-            });
+        //   // Try to get alerts for each day, starting with today
+        //   for (const dateStr of dates) {
+        //     const dateAlerts = await getDisasterAlerts({
+        //       numOfRows: 10,
+        //       pageNo: 1,
+        //       crtDt: dateStr,
+        //     });
 
-            if (dateAlerts && dateAlerts.length > 0) {
-              alerts = dateAlerts;
-              break; // Stop searching once we find alerts
-            }
-          }
+        //     if (dateAlerts && dateAlerts.length > 0) {
+        //       alerts = dateAlerts;
+        //       break; // Stop searching once we find alerts
+        //     }
+        //   }
 
-          // If still no alerts, try without date filter but with larger result set
-          if (!alerts || alerts.length === 0) {
-            alerts = await getDisasterAlerts({
-              numOfRows: 30,
-              pageNo: 1,
-            });
-          }
-        }
+        //   // If still no alerts, try without date filter but with larger result set
+        //   if (!alerts || alerts.length === 0) {
+        //     alerts = await getDisasterAlerts({
+        //       numOfRows: 30,
+        //       pageNo: 1,
+        //     });
+        //   }
+        // }
 
         console.log(`Found ${alerts?.length || 0} disaster alerts`);
         setDisasterAlerts(alerts || []);
@@ -318,43 +326,39 @@ const DisasterAlert = () => {
     );
   }
 
-  // Empty state
-  if (!disasterAlerts || disasterAlerts.length === 0) {
-    return (
-      <View style={styles.container}>
-        <MaterialIcons name="notifications-none" size={64} color="#8e8e93" />
-        <Text style={styles.emptyText}>
-          {t("noActiveAlerts", "현재 활성화된 재난 경보가 없습니다")}
-        </Text>
-        <Text style={styles.subText}>
-          {regionName
-            ? t(
-                "noRegionalAlerts",
-                `${regionName} 지역에 활성화된 재난 경보가 없습니다.`
-              )
-            : t("noNationalAlerts", "전국에 활성화된 재난 경보가 없습니다.")}
-        </Text>
-      </View>
-    );
-  }
-
   // Main view with alerts
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t("disasterAlerts", "재난 경보")}</Text>
-      {regionName && (
-        <Text style={styles.regionTitle}>
-          {regionName} {t("region", "지역")}
-        </Text>
-      )}
-
-      <FlatList
-        data={disasterAlerts}
-        renderItem={renderAlertItem}
-        keyExtractor={(item) => item.SN}
-        contentContainerStyle={styles.listContainer}
-        showsVerticalScrollIndicator={false}
+      <RegionPicker
+        selectedRegion={regionName}
+        onRegionChange={handleRegionChange}
       />
+
+      {!disasterAlerts || disasterAlerts.length === 0 ? (
+        <View style={styles.container}>
+          <MaterialIcons name="notifications-none" size={64} color="#8e8e93" />
+          <Text style={styles.emptyText}>
+            {t("noActiveAlerts", "현재 활성화된 재난 경보가 없습니다")}
+          </Text>
+          <Text style={styles.subText}>
+            {regionName
+              ? t(
+                  "noRegionalAlerts",
+                  `${regionName} 지역에 활성화된 재난 경보가 없습니다.`
+                )
+              : t("noNationalAlerts", "전국에 활성화된 재난 경보가 없습니다.")}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={disasterAlerts}
+          renderItem={renderAlertItem}
+          keyExtractor={(item) => item.SN}
+          contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
@@ -368,7 +372,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
     alignSelf: "flex-start",
