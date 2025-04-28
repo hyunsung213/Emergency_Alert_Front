@@ -32,6 +32,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   const [loading, setLoading] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [modalVisible, setModalVisible] = useState(false); // 모달 상태
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // 슬라이드 타이머 참조
 
   // Fetch recent disaster alerts
   useEffect(() => {
@@ -83,7 +84,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
     }, autoScrollInterval);
 
     return () => clearInterval(interval);
-  }, [alerts.length, autoScrollInterval, translateX, modalVisible]);
+  }, [alerts.length, autoScrollInterval, translateX]);
 
   // Get emergency color based on alert level
   const getEmergencyColor = (level: string) => {
@@ -181,15 +182,26 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setModalVisible(false)} // 모달 닫기
-              activeOpacity={1.0}
+              activeOpacity={1}
             >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
 
             <Text style={styles.modalTitle}>재난 정보</Text>
 
+            <View style={styles.modalMessageContainer}>
+              <Text style={styles.modalMessageText}>
+                <Text style={styles.modalLocationText}>
+                  [{extractLocation(currentAlert.RCPTN_RGN_NM)}]
+                </Text>{" "}
+                {formatMessage(currentAlert.MSG_CN)}
+              </Text>
+            </View>
+
             {/* DisasterShortInfo 컴포넌트 렌더링 */}
-            <DisasterShortInfo alert={currentAlert} />
+            <View style={styles.modalInfoContainer}>
+              <DisasterShortInfo alert={currentAlert} />
+            </View>
           </View>
         </View>
       </Modal>
@@ -256,7 +268,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "#34C759", // 초록색 배경
+    backgroundColor: "#b0a8b9", // 초록색 배경
     borderRadius: 15,
     width: 30,
     height: 30,
@@ -274,6 +286,38 @@ const styles = StyleSheet.create({
     color: "#333",
     textAlign: "center",
     marginBottom: 16, // 제목과 내용 간격
+  },
+  modalMessageText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#333",
+  },
+  modalLocationText: {
+    fontWeight: "bold",
+    color: "#34C759",
+  },
+  modalInfoContainer: {
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  modalMessageContainer: {
+    marginBottom: 16, // 메시지와 추가 정보 간격
+    padding: 10,
+    backgroundColor: "white",
+    borderRadius: 8,
+    elevation: 2, // Android shadow
+    shadowColor: "#000", // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 });
 

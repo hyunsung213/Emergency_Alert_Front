@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Button,
   Image,
   Modal,
   StyleSheet,
@@ -26,6 +27,7 @@ import {
 import { IEmergencyRoom } from "@/lib/api/interfaces/emergencyRoom";
 
 export default function Maps({ emergency }: { emergency: string }) {
+  const [key, setKey] = useState(0);
   const [earthquake, setEarthquake] = useState<IEarthquakeShelter[]>([]);
   const [heat, setHeat] = useState<IHeatShelter[]>([]);
   const [cold, setCold] = useState<IColdWaveShelter[]>([]);
@@ -47,6 +49,9 @@ export default function Maps({ emergency }: { emergency: string }) {
   const [selectedHospitalMarker, setSelectedHospitalMarker] =
     useState<IEmergencyRoom | null>();
 
+  const refreshMaps = () => {
+    setKey((key) => key + 1);
+  };
   // 현재 위치 가져오기
   useEffect(() => {
     async function getCurrentLocation() {
@@ -122,7 +127,7 @@ export default function Maps({ emergency }: { emergency: string }) {
   return (
     <View>
       <MapView
-        provider={PROVIDER_GOOGLE}
+        provider={PROVIDER_GOOGLE as "google"}
         initialRegion={{
           latitude: location?.coords.latitude || 37.5665, // 기본값: 서울
           longitude: location?.coords.longitude || 126.978, // 기본값: 서울
@@ -131,6 +136,7 @@ export default function Maps({ emergency }: { emergency: string }) {
         }}
         zoomEnabled={true}
         style={styles.map}
+        key={key}
       >
         {/* Emergency Rooms */}
         {hospital.length > 0 &&
