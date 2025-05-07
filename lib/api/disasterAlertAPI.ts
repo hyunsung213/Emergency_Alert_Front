@@ -26,7 +26,6 @@ export interface DisasterAlertResponse {
 
 // Request Parameters Interface
 interface DisasterAlertParams {
-  serviceKey?: string; // 서비스 키
   numOfRows?: number; // 페이지당 개수
   pageNo?: number; // 페이지 번호
   returnType?: "JSON" | "XML"; // 응답 타입
@@ -34,15 +33,8 @@ interface DisasterAlertParams {
   rgnNm?: string; // 지역명(시도명, 시군구명)
 }
 
-/**
- * 재난 문자 목록을 조회하는 함수
- *
- * @param params 재난 문자 API 요청 파라미터
- * @returns 재난 문자 목록
- */
 export async function getDisasterAlerts(params: DisasterAlertParams) {
   const {
-    serviceKey = "7VJ3395DDO11Q705",
     numOfRows = 10,
     pageNo = 1,
     returnType = "JSON",
@@ -50,36 +42,24 @@ export async function getDisasterAlerts(params: DisasterAlertParams) {
     rgnNm,
   } = params;
 
-  const url = new URL("https://www.safetydata.go.kr/V2/api/DSSP-IF-00247");
-  // Add query parameters
-  url.searchParams.append("serviceKey", serviceKey);
-  url.searchParams.append("numOfRows", numOfRows.toString());
-  url.searchParams.append("pageNo", pageNo.toString());
-  url.searchParams.append("returnType", returnType);
+  // Build query parameters object
+  const queryParams: Record<string, string> = {
+    numOfRows: numOfRows.toString(),
+    pageNo: pageNo.toString(),
+    returnType: returnType,
+  };
 
-  // // Add optional parameters only if they are provided
-  if (crtDt) url.searchParams.append("crtDt", crtDt);
-  if (rgnNm && rgnNm !== "전국") url.searchParams.append("rgnNm", rgnNm);
+  // Add optional parameters only if they are provided
+  if (crtDt) queryParams.crtDt = crtDt;
+  if (rgnNm && rgnNm !== "전국") queryParams.rgnNm = rgnNm;
 
   try {
-    const response = await fetch(url.toString());
+    // Use the external API URL directly with apiClient
+    const data = await apiClient.get<DisasterAlertItem[]>("/disaster-alerts", {
+      params: queryParams,
+    });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("API error details:", errorText);
-      throw new Error(`Disaster Alert API error: ${response.status}`);
-    }
-
-    const data: DisasterAlertResponse = await response.json();
-
-    // Check for API error in the response
-    if (data.header.resultCode !== "00") {
-      throw new Error(
-        `API error: ${data.header.resultMsg} (${data.header.resultCode})`
-      );
-    }
-
-    return data.body;
+    return data;
   } catch (error) {
     console.error("Failed to fetch disaster alerts:", error);
     throw error;
