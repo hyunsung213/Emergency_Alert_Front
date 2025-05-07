@@ -95,3 +95,27 @@ export interface IColdWaveShelter {
   rmrk?: string; // 비고
   use_yn?: string; // 사용 여부
 }
+
+export interface IFloodShelter {
+  r_seq_no: number; // 시설번호
+  cd_area: number; // 지역코드
+  no_equp_se: number; // 시설구분코드
+  sd_nm: string; // 시도명
+  sgg_nm: string; // 시군구명
+  cd_equp: number;
+  gb_acmd: string;
+  equp_nm: string;
+  rdnmadr_cd: string;
+  bdong_cd: string;
+  hdong_cd: string;
+  loc_sfpr_a: string;
+  sect_equp: number;
+  qty_cpty: number;
+  xcord: number;
+  ycord: number;
+  xx: number;
+  yy: number;
+  lat: number; // 위도
+  lot: number; // 경도
+  cd_gubun: string;
+}

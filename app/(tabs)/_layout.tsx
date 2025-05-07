@@ -12,8 +12,6 @@ import AppHeader from "@/components/AppHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ backgroundColor: "white" }} />
@@ -28,7 +26,7 @@ export default function TabLayout() {
             backgroundColor: "white", // 탭바 배경색
             borderTopWidth: 1, // 탭바 상단 구분선
             borderTopColor: "#e0e0e0", // 구분선 색상
-            position: "absolute", // 탭바를 화면에 고정하지 않음
+            position: "static", // 탭바를 화면에 고정하지 않음
           },
         }}
       >
@@ -77,6 +75,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    marginTop: -50,
   },
   tabBar: {
     borderTopWidth: 1,

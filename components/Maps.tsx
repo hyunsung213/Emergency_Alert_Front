@@ -15,6 +15,7 @@ import {
   IColdWaveShelter,
   IDustShelter,
   IEarthquakeShelter,
+  IFloodShelter,
   IHeatShelter,
 } from "@/lib/api/interfaces/shelter";
 import {
@@ -22,6 +23,7 @@ import {
   getDustShelter,
   getEarthquakeShelter,
   getEmergencyRoom,
+  getFloodShelter,
   getHeatShelter,
 } from "@/lib/api/interfaces/get";
 import { IEmergencyRoom } from "@/lib/api/interfaces/emergencyRoom";
@@ -32,6 +34,7 @@ export default function Maps({ emergency }: { emergency: string }) {
   const [heat, setHeat] = useState<IHeatShelter[]>([]);
   const [cold, setCold] = useState<IColdWaveShelter[]>([]);
   const [dust, setDust] = useState<IDustShelter[]>([]);
+  const [flood, setFlood] = useState<IFloodShelter[]>([]);
   const [hospital, setHospital] = useState<IEmergencyRoom[]>([]);
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
@@ -46,6 +49,8 @@ export default function Maps({ emergency }: { emergency: string }) {
     useState<IColdWaveShelter | null>();
   const [selectedDustMarker, setSelectedDustMarker] =
     useState<IDustShelter | null>();
+  const [selectedFloodMarker, setSelectedFloodMarker] =
+    useState<IFloodShelter | null>();
   const [selectedHospitalMarker, setSelectedHospitalMarker] =
     useState<IEmergencyRoom | null>();
 
@@ -82,34 +87,45 @@ export default function Maps({ emergency }: { emergency: string }) {
     const fetchData = async () => {
       try {
         // API 요청을 병렬로 처리하여 성능 개선
-        const [loc_earthquake, loc_heat, loc_cold, loc_dust, loc_hospital] =
-          await Promise.all([
-            getEarthquakeShelter({
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            }),
-            getHeatShelter({
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            }),
-            getColdWaveShelter({
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            }),
-            getDustShelter({
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            }),
-            getEmergencyRoom({
-              lon: location.coords.longitude,
-              lat: location.coords.latitude,
-            }),
-          ]);
+        const [
+          loc_earthquake,
+          loc_heat,
+          loc_cold,
+          loc_dust,
+          loc_flood,
+          loc_hospital,
+        ] = await Promise.all([
+          getEarthquakeShelter({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+          getHeatShelter({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+          getColdWaveShelter({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+          getDustShelter({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+          getFloodShelter({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+          getEmergencyRoom({
+            lon: location.coords.longitude,
+            lat: location.coords.latitude,
+          }),
+        ]);
 
         setEarthquake(loc_earthquake.data);
         setHeat(loc_heat.data);
         setCold(loc_cold.data);
         setDust(loc_dust.data);
+        setFlood(loc_flood.data);
         setHospital(loc_hospital.data);
       } catch (error) {
         console.error("Error fetching shelter data:", error);
@@ -220,6 +236,22 @@ export default function Maps({ emergency }: { emergency: string }) {
             />
           ))}
 
+        {/* Flood Shelters */}
+        {flood.length > 0 &&
+          emergency === "flood" &&
+          flood.map((element) => (
+            <Marker
+              key={element.r_seq_no}
+              coordinate={{
+                latitude: Number(element.lat),
+                longitude: Number(element.lot),
+              }}
+              title={element.equp_nm}
+              image={require("../assets/images/flood.png")}
+              onPress={() => setSelectedFloodMarker(element)}
+            />
+          ))}
+
         {/* 현재 위치 */}
         <Marker
           coordinate={{
@@ -303,6 +335,21 @@ export default function Maps({ emergency }: { emergency: string }) {
 
           <TouchableOpacity
             onPress={() => setSelectedDustMarker(null)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {selectedFloodMarker && (
+        <View style={styles.calloutContainer}>
+          <Text style={styles.calloutTitle}>{selectedFloodMarker.equp_nm}</Text>
+          <Text style={styles.calloutText}>
+            {selectedFloodMarker.loc_sfpr_a}
+          </Text>
+          <TouchableOpacity
+            onPress={() => setSelectedFloodMarker(null)}
             style={styles.closeButton}
           >
             <Text style={styles.closeButtonText}>X</Text>

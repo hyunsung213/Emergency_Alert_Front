@@ -403,7 +403,7 @@ const WeatherScreen = () => {
         <Text style={styles.temperature}>{tmp}°C</Text>
         <Text style={styles.weatherDescription}>{getWeatherDescription()}</Text>
 
-        <View style={styles.weatherDetails}>
+        <View>
           <View style={styles.weatherDetailsGrid}>
             {/* 습도 (Humidity) box */}
             <View style={styles.weatherBox}>
@@ -598,8 +598,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
-    marginTop: 40,
   },
   weatherIcon: {
     fontSize: 36,
@@ -612,17 +610,20 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   weatherCard: {
-    backgroundColor: "white",
-    borderRadius: 15,
-    padding: 20,
-    shadowColor: "#000",
+    flex: 1,
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2, // Android shadow
+    shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    marginBottom: 5,
+    marginTop: 16,
   },
   temperature: {
-    fontSize: 48,
+    fontSize: 40,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 5,
@@ -633,52 +634,49 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#666",
   },
-  weatherDetails: {
-    marginTop: 10,
-  },
   weatherDetailsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginTop: 20,
   },
   weatherBox: {
     width: "48%",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 16,
-    padding: 15,
+    backgroundColor: "#f9f9f9", // Softer background color
+    borderRadius: 12, // Rounded corners
+    padding: 16, // Adjusted padding
     marginBottom: 16,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: 4,
     elevation: 2,
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.05)",
+    borderColor: "#ddd", // Subtle border color
   },
   boxIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(240, 240, 240, 0.8)",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#f0f0f0", // Softer icon background
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 8,
   },
   boxTitle: {
     fontSize: 14,
-    color: "#666",
-    marginBottom: 5,
+    color: "#777", // Softer text color
+    marginBottom: 6, // Adjusted spacing
   },
+
   boxValue: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20, // Slightly smaller font
+    fontWeight: "600", // Medium weight
     color: "#333",
   },
+
   boxUnit: {
-    fontSize: 16,
-    fontWeight: "normal",
+    fontSize: 14,
+    fontWeight: "400", // Normal weight
     color: "#666",
   },
   weatherRow: {

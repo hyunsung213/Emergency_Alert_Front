@@ -6,6 +6,7 @@ import {
   IDustShelter,
   IEarthquakeOutdoorShelter,
   IEarthquakeShelter,
+  IFloodShelter,
   IHeatShelter,
 } from "./shelter";
 import { ListResponse } from "./type";
@@ -39,6 +40,13 @@ export async function getDustShelter({ lat, lon }: Coordinate) {
 export async function getColdWaveShelter({ lat, lon }: Coordinate) {
   return await apiClient.get<ListResponse<IColdWaveShelter>>(
     `/nearby/coldwave-shelters?lat=${lat}&lon=${lon}`,
+    {}
+  );
+}
+
+export async function getFloodShelter({ lat, lon }: Coordinate) {
+  return await apiClient.get<ListResponse<IFloodShelter>>(
+    `/nearby/flood-shelters?lat=${lat}&lon=${lon}`,
     {}
   );
 }

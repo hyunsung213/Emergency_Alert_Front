@@ -36,6 +36,7 @@ export default function Home() {
           <Picker.Item label="폭염대피소" value="heat" />
           <Picker.Item label="한파대피소" value="cold" />
           <Picker.Item label="미세먼지대피소" value="dust" />
+          <Picker.Item label="수해대피소" value="flood" />
         </Picker>
       </View>
 
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 8,
     overflow: "hidden",
-    marginBottom: 50,
+    marginBottom: 5,
     elevation: 2, // Android shadow
     shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },
