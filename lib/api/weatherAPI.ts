@@ -27,7 +27,6 @@ export interface WeatherResponse {
 }
 
 interface WeatherParams {
-  serviceKey?: string;
   pageNo?: number;
   numOfRows?: number;
   dataType?: "XML" | "JSON";
@@ -39,7 +38,6 @@ interface WeatherParams {
 
 export async function getWeatherData(params: WeatherParams) {
   const {
-    serviceKey = "YVeE3x8nNRvb8e2uEblu0OZl41gEgvlVxowMBAoa84gVh71gRFsAdw91ij7scDwXqn1f2er5wuqbyT7i%2Bn7bNw%3D%3D",
     pageNo = 1,
     numOfRows = 1000,
     dataType = "JSON",
@@ -53,10 +51,6 @@ export async function getWeatherData(params: WeatherParams) {
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
   );
 
-  // Add query parameters
-  const rawServiceKey = decodeURIComponent(serviceKey);
-
-  url.searchParams.append("serviceKey", rawServiceKey);
   url.searchParams.append("pageNo", pageNo.toString());
   url.searchParams.append("numOfRows", numOfRows.toString());
   url.searchParams.append("dataType", dataType);
@@ -65,13 +59,11 @@ export async function getWeatherData(params: WeatherParams) {
   url.searchParams.append("nx", nx.toString());
   url.searchParams.append("ny", ny.toString());
 
-  const response = await fetch(url.toString());
+  const data = await apiClient.get<WeatherItem[]>("/weather", {
+    params: {
+      ...params,
+    },
+  });
 
-  if (!response.ok) {
-    throw new Error(`Weather API error: ${response.status}`);
-  }
-
-  const data: WeatherResponse = await response.json();
-
-  return data.response.body.items.item;
+  return data;
 }
