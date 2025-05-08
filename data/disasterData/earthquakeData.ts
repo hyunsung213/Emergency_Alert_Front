@@ -77,11 +77,11 @@ export const earthquakeData_en = {
     "In high-rise buildings, be extra cautious due to strong shaking. If safe, turn off gas and electricity.",
   ],
   지진장소별_행동요령: {
-    극장_경기장: [
+    theater_stadium: [
       "During shaking, protect your head with a bag or similar object.",
       "When the shaking stops, follow instructions and evacuate calmly.",
     ],
-    lding: [
+    buillding: [
       "Take cover under a table and watch for falling objects.",
       "When the shaking stops, evacuate quickly via the stairs.",
     ],

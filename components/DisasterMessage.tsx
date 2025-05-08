@@ -14,6 +14,7 @@ import {
   getDisasterAlerts,
 } from "@/lib/api/disasterAlertAPI";
 import DisasterShortInfo from "./DisasterShortInfo";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DisasterMessageProps {
   maxMessages?: number;
@@ -27,6 +28,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   maxMessages = 5,
   autoScrollInterval = 5000, // 5 seconds
 }) => {
+  const { language } = useLanguage();
   const [alerts, setAlerts] = useState<DisasterAlertItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -200,7 +202,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
 
             {/* DisasterShortInfo 컴포넌트 렌더링 */}
             <View style={styles.modalInfoContainer}>
-              <DisasterShortInfo alert={currentAlert} />
+              <DisasterShortInfo alert={currentAlert} language={language} />
             </View>
           </View>
         </View>

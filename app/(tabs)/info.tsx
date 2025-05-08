@@ -1,23 +1,12 @@
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { heatwaveData } from "@/data/disasterData/heatData";
-import InfoSection from "@/components/InfoSection";
-import { droughtData } from "@/data/disasterData/droughtData";
-import { windstormData } from "@/data/disasterData/windstormData";
-import { snowstormData } from "@/data/disasterData/snowstormData";
-import { dustData } from "@/data/disasterData/dustData";
-import { landslideData } from "@/data/disasterData/landslideData";
-import { earthquakeData } from "@/data/disasterData/earthquakeData";
-import { typhoonData } from "@/data/disasterData/typhoonData";
-import { coldWaveData } from "@/data/disasterData/coldData";
-import { heavyRainData } from "@/data/disasterData/heavyrainData";
-import { floodData } from "@/data/disasterData/floodData";
-import { volcanoData } from "@/data/disasterData/volcanoData";
 import DisasterInfo from "@/components/DisasterInfo";
 import SafetyInfo from "@/components/SafetyInfo";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Info() {
+  const { language } = useLanguage();
   const [emergency, setEmergency] = useState<string>("earthquake");
   const [safety, setSafety] = useState<string>("gasSafety");
   const [select, setSelect] = useState<Number>(0);
@@ -115,8 +104,10 @@ export default function Info() {
 
       {/* DisasterInfo와 SafetyInfo */}
       <View style={styles.infoContainer}>
-        {select === 0 && <DisasterInfo emergency={emergency} />}
-        {select === 1 && <SafetyInfo safety={safety} />}
+        {select === 0 && (
+          <DisasterInfo emergency={emergency} language={language} />
+        )}
+        {select === 1 && <SafetyInfo safety={safety} language={language} />}
       </View>
     </View>
   );
