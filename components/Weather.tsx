@@ -9,6 +9,7 @@ import * as Location from "expo-location";
 import { useCallback, useEffect, useState } from "react";
 import { getWeatherData, WeatherItem } from "@/lib/api/weatherAPI";
 import { MaterialIcons } from "@expo/vector-icons";
+import { koreanRegionsMap, useLanguage } from "@/contexts/LanguageContext";
 
 // Convert GPS coordinates to grid coordinates for Korean weather API
 function convertToGrid(lat: number, lon: number) {
@@ -95,7 +96,19 @@ function getWindDirection(uuu: number, vvv: number): string {
   return directions[compassIndex];
 }
 
+const translateMainRegion = (regionName: string, language: string): string => {
+  // Look up the region in the koreanRegionsMap
+  const regionData = koreanRegionsMap.get(regionName);
+  if (regionData && regionData.name[language as "en" | "ja" | "zh"]) {
+    return regionData.name[language as "en" | "ja" | "zh"];
+  }
+
+  // If the region isn't in the map, or there's no translation for this language
+  return regionName;
+};
+
 const WeatherScreen = () => {
+  const { t, effectiveLanguage } = useLanguage();
   const [weatherData, setWeatherData] = useState<Record<string, string> | null>(
     null
   );
@@ -122,8 +135,6 @@ const WeatherScreen = () => {
         nx: grid.nx,
         ny: grid.ny,
       });
-
-      console.log("Weather API response:", response);
 
       // Process the data to extract the values we need
       const processedData = processWeatherData(response);
@@ -252,8 +263,12 @@ const WeatherScreen = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#4A90E2" />
-        <Text style={styles.loadingText}>날씨 정보를 불러오는 중...</Text>
-        <Text style={styles.subText}>잠시만 기다려주세요</Text>
+        <Text style={styles.loadingText}>
+          {t("loadingWeather", "날씨 정보를 불러오는 중...")}
+        </Text>
+        <Text style={styles.subText}>
+          {t("pleaseWait", "잠시만 기다려주세요")}
+        </Text>
       </View>
     );
   }
@@ -264,7 +279,9 @@ const WeatherScreen = () => {
         <View style={styles.errorIconContainer}>
           <Text style={styles.errorIcon}>⚠️</Text>
         </View>
-        <Text style={styles.errorTitle}>날씨 정보를 불러올 수 없습니다</Text>
+        <Text style={styles.errorTitle}>
+          {t("weatherLoadError", "날씨 정보를 불러올 수 없습니다")}
+        </Text>
         <Text style={styles.errorText}>{errorMsg}</Text>
         <TouchableOpacity
           style={styles.retryButton}
@@ -274,7 +291,7 @@ const WeatherScreen = () => {
             fetchWeatherData(); // You'll need to move this function outside useEffect
           }}
         >
-          <Text style={styles.retryButtonText}>다시 시도</Text>
+          <Text style={styles.retryButtonText}>{t("retry", "다시 시도")}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -291,7 +308,9 @@ const WeatherScreen = () => {
           <View style={styles.placeholderRow} />
           <View style={styles.placeholderRow} />
         </View>
-        <Text style={styles.loadingText}>날씨 데이터 준비 중...</Text>
+        <Text style={styles.loadingText}>
+          {t("preparingWeatherData", "날씨 데이터 준비 중...")}
+        </Text>
       </View>
     );
   }
@@ -316,20 +335,20 @@ const WeatherScreen = () => {
 
   // Enhanced category mappings
   const skyMapping: Record<string, string> = {
-    "1": "맑음",
-    "3": "구름 많음",
-    "4": "흐림",
+    "1": t("clear", "맑음"),
+    "3": t("partlyCloudy", "구름 많음"),
+    "4": t("cloudy", "흐림"),
   };
 
   const ptyMapping: Record<string, string> = {
-    "0": "없음",
-    "1": "비",
-    "2": "비/눈",
-    "3": "눈",
-    "4": "소나기",
-    "5": "빗방울",
-    "6": "빗방울/눈날림",
-    "7": "눈날림",
+    "0": t("none", "없음"),
+    "1": t("rain", "비"),
+    "2": t("rainSnow", "비/눈"),
+    "3": t("snow", "눈"),
+    "4": t("shower", "소나기"),
+    "5": t("drizzle", "빗방울"),
+    "6": t("snowRainDrops", "빗방울/눈날림"),
+    "7": t("snowFlurry", "눈날림"),
   };
 
   // Function to get weather icon based on conditions
@@ -369,7 +388,16 @@ const WeatherScreen = () => {
   // Get wind direction from vector angle or UUU/VVV if available
   const getWindDirectionFromVec = (vecValue: string) => {
     const vecNum = parseInt(vecValue);
-    const directions = ["북", "북동", "동", "남동", "남", "남서", "서", "북서"];
+    const directions = [
+      t("north", "북"),
+      t("northEast", "북동"),
+      t("east", "동"),
+      t("southEast", "남동"),
+      t("south", "남"),
+      t("southWest", "남서"),
+      t("west", "서"),
+      t("northWest", "북서"),
+    ];
     const index = Math.round(vecNum / 45) % 8;
     return directions[index];
   };
@@ -381,9 +409,12 @@ const WeatherScreen = () => {
     const popValue = parseInt(pop);
 
     if (ptyCode > 0) {
-      return ptyMapping[pty] + (popValue > 50 ? " (강)" : " (약)");
+      return (
+        ptyMapping[pty] +
+        (popValue > 50 ? ` (${t("heavy", "강")})` : ` (${t("light", "약")})`)
+      );
     } else {
-      return skyMapping[sky] || "정보 없음";
+      return skyMapping[sky] || t("noInfo", "정보 없음");
     }
   };
 
@@ -391,13 +422,15 @@ const WeatherScreen = () => {
     <View style={styles.container}>
       <View style={styles.weatherHeader}>
         <Text style={styles.weatherIcon}>{getWeatherIcon()}</Text>
-        <Text style={styles.header}>오늘의 날씨</Text>
+        <Text style={styles.header}>{t("todayWeather", "오늘의 날씨")}</Text>
       </View>
 
       <View style={styles.weatherCard}>
         <View style={styles.locationContainer}>
           <MaterialIcons name="location-on" size={18} color="#666" />
-          <Text style={styles.locationText}>{regionName}</Text>
+          <Text style={styles.locationText}>
+            {translateMainRegion(regionName, effectiveLanguage)}
+          </Text>
         </View>
 
         <Text style={styles.temperature}>{tmp}°C</Text>
@@ -410,7 +443,7 @@ const WeatherScreen = () => {
               <View style={styles.boxIconContainer}>
                 <MaterialIcons name="opacity" size={24} color="#4A90E2" />
               </View>
-              <Text style={styles.boxTitle}>습도</Text>
+              <Text style={styles.boxTitle}>{t("humidity", "습도")}</Text>
               <Text style={styles.boxValue}>
                 {reh !== "N/A" ? reh : "--"}
                 <Text style={styles.boxUnit}>%</Text>
@@ -422,7 +455,9 @@ const WeatherScreen = () => {
               <View style={styles.boxIconContainer}>
                 <MaterialIcons name="thermostat" size={24} color="#FF9500" />
               </View>
-              <Text style={styles.boxTitle}>최저/최고</Text>
+              <Text style={styles.boxTitle}>
+                {t("minMaxTemp", "최저/최고")}
+              </Text>
               <Text style={styles.boxValue}>
                 {tmn !== "N/A" ? tmn : "--"}/{tmx !== "N/A" ? tmx : "--"}
                 <Text style={styles.boxUnit}>°C</Text>
@@ -434,7 +469,9 @@ const WeatherScreen = () => {
               <View style={styles.boxIconContainer}>
                 <MaterialIcons name="umbrella" size={24} color="#34C759" />
               </View>
-              <Text style={styles.boxTitle}>강수확률</Text>
+              <Text style={styles.boxTitle}>
+                {t("precipitationProb", "강수확률")}
+              </Text>
               <Text style={styles.boxValue}>
                 {pop}
                 <Text style={styles.boxUnit}>%</Text>
@@ -446,7 +483,7 @@ const WeatherScreen = () => {
               <View style={styles.boxIconContainer}>
                 <MaterialIcons name="air" size={24} color="#AF52DE" />
               </View>
-              <Text style={styles.boxTitle}>풍속</Text>
+              <Text style={styles.boxTitle}>{t("windSpeed", "풍속")}</Text>
               <Text style={styles.boxValue}>
                 {wsd}
                 <Text style={styles.boxUnit}>m/s</Text>
@@ -456,14 +493,14 @@ const WeatherScreen = () => {
 
           {pcp && pcp !== "0" && (
             <View style={styles.weatherRow}>
-              <Text style={styles.label}>강수량:</Text>
+              <Text style={styles.label}>{t("precipitation", "강수량")}:</Text>
               <Text style={styles.value}>{pcp} mm</Text>
             </View>
           )}
 
           {sno && sno !== "0" && (
             <View style={styles.weatherRow}>
-              <Text style={styles.label}>적설량:</Text>
+              <Text style={styles.label}>{t("snowfall", "적설량")}:</Text>
               <Text style={styles.value}>{sno} cm</Text>
             </View>
           )}
