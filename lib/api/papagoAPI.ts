@@ -24,7 +24,7 @@ export async function getPapagoTranslation(
   targetLang: Exclude<Language, "auto">
 ) {
   const random = Math.random();
-  if (random < 0.2) {
+  if (random < 0.001) {
     const request: PapagoTranslationRequest = {
       text,
       targetLang: PAPAGO_LANGUAGE_MAP[targetLang] as Exclude<Language, "auto">,

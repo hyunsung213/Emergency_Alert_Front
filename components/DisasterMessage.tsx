@@ -12,8 +12,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import {
   DisasterAlertItem,
   getDisasterAlerts,
+  getDisasterAlertsByRegion,
 } from "@/lib/api/disasterAlertAPI";
 import DisasterShortInfo from "./DisasterShortInfo";
+import * as Location from "expo-location";
+import { koreanRegionsMap, useLanguage } from "@/contexts/LanguageContext";
+import { TranslatedText, TranslatedTextView } from "./ui/TranslatedText";
 
 interface DisasterMessageProps {
   maxMessages?: number;
@@ -27,21 +31,92 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   maxMessages = 5,
   autoScrollInterval = 5000, // 5 seconds
 }) => {
+  const { t, effectiveLanguage } = useLanguage();
+  const [regionName, setRegionName] = useState<string>("");
   const [alerts, setAlerts] = useState<DisasterAlertItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const translateX = useRef(new Animated.Value(0)).current;
   const [modalVisible, setModalVisible] = useState(false); // 모달 상태
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // 슬라이드 타이머 참조
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const translateMainRegion = (
+    regionName: string,
+    language: string
+  ): string => {
+    // Look up the region in the koreanRegionsMap
+    const regionData = koreanRegionsMap.get(regionName);
+    if (regionData && regionData.name[language as "en" | "ja" | "zh"]) {
+      return regionData.name[language as "en" | "ja" | "zh"];
+    }
+
+    // If the region isn't in the map, or there's no translation for this language
+    return regionName;
+  };
+
+  useEffect(() => {
+    async function getCurrentLocation() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg(
+          t(
+            "locationPermissionDenied",
+            "위치 권한에 대한 승인이 누락되었습니다."
+          )
+        );
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const location_user = await Location.getCurrentPositionAsync({});
+        // Get region name from coordinates
+        const geocode = await Location.reverseGeocodeAsync({
+          latitude: location_user.coords.latitude,
+          longitude: location_user.coords.longitude,
+        });
+
+        if (geocode && geocode.length > 0) {
+          // Extract region names for API query
+          const region = geocode[0];
+          let regionQuery = "";
+
+          // Korean APIs typically use administrative areas
+          if (region.region) regionQuery = region.region; // Province/State/City
+          if (region.subregion) {
+            regionQuery = regionQuery
+              ? `${regionQuery} ${region.subregion}`
+              : region.subregion;
+          }
+
+          setRegionName(regionQuery);
+        }
+      } catch (error) {
+        setErrorMsg(
+          t("locationError", "위치를 불러오는 중 오류가 발생했습니다.")
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getCurrentLocation();
+  }, [t]);
 
   // Fetch recent disaster alerts
   useEffect(() => {
     async function fetchAlerts() {
       try {
-        const data = await getDisasterAlerts({
-          numOfRows: maxMessages,
-          pageNo: 1,
-        });
+        setLoading(true);
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+        const todayStr = `${year}${month}${day}`;
+
+        const data = await getDisasterAlertsByRegion(regionName, todayStr);
 
         if (data && data.length > 0) {
           setAlerts(data);
@@ -57,7 +132,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
     }
 
     fetchAlerts();
-  }, [maxMessages]);
+  }, [maxMessages, regionName]);
 
   // Auto-scroll to next message
   useEffect(() => {
@@ -156,9 +231,14 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
         >
           <Text style={styles.messageText}>
             <Text style={styles.locationText}>
-              [{extractLocation(currentAlert.RCPTN_RGN_NM)}]
+              [
+              {translateMainRegion(
+                extractLocation(currentAlert.RCPTN_RGN_NM),
+                effectiveLanguage
+              )}
+              ]
             </Text>{" "}
-            {formatMessage(currentAlert.MSG_CN)}
+            <TranslatedText text={formatMessage(currentAlert.MSG_CN)} />
           </Text>
         </Animated.View>
 
@@ -187,15 +267,21 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
 
-            <Text style={styles.modalTitle}>재난 정보</Text>
+            <Text style={styles.modalTitle}>
+              {t("disasterInfo", "재난 정보")}
+            </Text>
 
             <View style={styles.modalMessageContainer}>
-              <Text style={styles.modalMessageText}>
+              <View style={styles.modalMessageHeader}>
                 <Text style={styles.modalLocationText}>
-                  [{extractLocation(currentAlert.RCPTN_RGN_NM)}]
-                </Text>{" "}
-                {formatMessage(currentAlert.MSG_CN)}
-              </Text>
+                  {translateMainRegion(
+                    extractLocation(currentAlert.RCPTN_RGN_NM),
+                    effectiveLanguage
+                  )}
+                </Text>
+              </View>
+
+              <TranslatedTextView text={currentAlert.MSG_CN} />
             </View>
 
             {/* DisasterShortInfo 컴포넌트 렌더링 */}
@@ -295,6 +381,7 @@ const styles = StyleSheet.create({
   modalLocationText: {
     fontWeight: "bold",
     color: "#34C759",
+    fontSize: 18,
   },
   modalInfoContainer: {
     flex: 1,
@@ -318,6 +405,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  modalMessageHeader: {
+    flexDirection: "row",
+    marginBottom: 8,
+  },
+  modalMessageContent: {
+    marginTop: 4,
   },
 });
 
