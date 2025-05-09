@@ -1,12 +1,13 @@
-import { earthquakeData } from "@/data/disasterData/earthquakeData";
 import { DisasterAlertItem } from "@/lib/api/disasterAlertAPI";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import DisasterInfo from "./DisasterInfo";
 
 export default function DisasterShortInfo({
   alert,
+  language,
 }: {
   alert: DisasterAlertItem;
+  language: string;
 }) {
   const dst_se_nm = alert.DST_SE_NM; // 재해구분명
   const disasterTypes: { [key: string]: string } = {
@@ -25,5 +26,7 @@ export default function DisasterShortInfo({
     화산폭발: "volcano",
   };
 
-  return <DisasterInfo emergency={disasterTypes[dst_se_nm]} />;
+  return (
+    <DisasterInfo emergency={disasterTypes[dst_se_nm]} language={language} />
+  );
 }

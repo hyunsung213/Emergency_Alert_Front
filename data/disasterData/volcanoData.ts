@@ -1,4 +1,4 @@
-export const volcanoData = {
+export const volcanoData_ko = {
   화산재_낙하_대비: [
     "방진 마스크와 방호 안경을 준비하세요.",
     "휴대용 램프, 손전등, 약간의 현금, 3일치 음료수, 연료, 모포, 의류 등을 비치하세요.",
@@ -47,5 +47,161 @@ export const volcanoData = {
     "응급 구조·구급: 119",
     "기상청(예보·상담): 국번 없이 131",
     "기타 문의: 120 다산콜, 상수도 121, 한전 123 등",
+  ],
+};
+
+export const volcanoData_en = {
+  화산재_낙하_대비: [
+    "Prepare dust masks and safety goggles.",
+    "Keep portable lamps, flashlights, some cash, 3 days' worth of drinks, fuel, blankets, and clothing.",
+    "Equip your vehicle with emergency supplies, including a radio and batteries.",
+    "Pack medical supplies, a first aid kit, tape and plastic wrap (to seal window gaps), and cleaning tools.",
+  ],
+  화산재_낙하_중: [
+    "Stay indoors as much as possible.",
+    "Do not wear contact lenses (risk of corneal damage).",
+    "Listen to disaster broadcasts on TV or radio.",
+    "If outside, seek shelter in a vehicle or building.",
+    "Cover your nose and mouth with a mask, handkerchief, or clothing.",
+    "Seal door gaps and ventilation with wet towels, and tape windows shut.",
+    "Ensure drains are separated from rainwater drains to prevent volcanic ash blockages.",
+    "Avoid going outside if you have chronic bronchitis or asthma.",
+    "Disconnect pipes connected to rainwater collection systems.",
+    "Wash vegetables thoroughly before consuming.",
+    "Use only the upper layer of water if it is mixed with volcanic ash.",
+  ],
+  화산재_낙하_후: [
+    "When cleaning, avoid letting volcanic ash get into machinery, vehicles, or water and sewage systems.",
+    "Turn off power before cleaning electrical appliances.",
+    "Clean volcanic ash with water at the appropriate time, but avoid excessive water as it may harden the ash.",
+    "Use a vacuum cleaner and be cautious of ash particles when dusting.",
+    "Clean areas that are frequently exposed to the elements multiple times a day.",
+    "Do not use floor scrubbers with brushes, ventilation fans, or clothes dryers.",
+    "Change clothes worn outside and wash your body thoroughly.",
+    "Dispose of collected volcanic ash in a sturdy plastic bag at the designated location.",
+    "Wear goggles and a mask while quickly cleaning indoors, outdoors, and in the car.",
+  ],
+  자동차_운전: [
+    "Avoid driving if possible.",
+    "If necessary, drive slowly with headlights on.",
+    "Be careful not to scratch the glass when using wipers, and use enough cleaning fluid.",
+    "Change engine oil, oil filters, and air filters frequently.",
+    "Thoroughly clean the inside of your vehicle, trunk, and engine.",
+    "Seal air intakes and electronic components before cleaning.",
+  ],
+  왜_화산재를_청소해야_할까: [
+    "Volcanic ash can infiltrate electronic devices and cause irreparable damage.",
+    "The rough particles can cause scratches, so use cleaning fluid to gently wipe surfaces.",
+    "On dry days, volcanic ash may be blown back into the air or moved by vehicles, harming your health.",
+    "Volcanic ash can be carried by winds months to years after an eruption, requiring repeated cleaning.",
+  ],
+  비상연락처: [
+    "Emergency rescue/ambulance: 119",
+    "Weather forecast/consultation: 131 (toll-free)",
+    "Other inquiries: 120 Dasan Call, Water Supply 121, Korea Electric Power Corporation 123, etc.",
+  ],
+};
+
+export const volcanoData_jp = {
+  화산재_낙하_대비: [
+    "防塵マスクと保護メガネを準備してください。",
+    "携帯ランプ、懐中電灯、少額の現金、3日分の飲料水、燃料、毛布、衣類などを備えておいてください。",
+    "車には防災用品を備え、ラジオとバッテリーも準備してください。",
+    "医薬品や救急セット、テープやラップ（窓の隙間を塞ぐため）、掃除用具も準備しましょう。",
+  ],
+  화산재_낙하_중: [
+    "できるだけ室内にとどまりましょう。",
+    "コンタクトレンズは使用しないでください（角膜損傷のリスク）。",
+    "テレビやラジオで災害放送を聴いてください。",
+    "屋外にいる場合は、車や建物に避難してください。",
+    "マスクやハンカチ、衣服で鼻と口を覆いましょう。",
+    "ドアの隙間と換気口は濡れたタオルで、窓はテープで塞ぎましょう。",
+    "排水口は雨水排水口から分けて、火山灰で詰まらないようにしましょう。",
+    "慢性気管支炎や喘息の方は外出を避けてください。",
+    "雨水収集システムに接続されているパイプを外してください。",
+    "野菜は必ず洗ってから食べてください。",
+    "火山灰が混じった水は、上澄みだけを使用してください。",
+  ],
+  화산재_낙하_후: [
+    "掃除の際、室内外の機械、車、上下水道に火山灰が入らないように注意してください。",
+    "家電製品は電源を切ってから掃除しましょう。",
+    "火山灰は適切なタイミングで水で掃除しますが、水を過剰にかけないようにしましょう（固まるのを防ぐため）。",
+    "掃除機を使用し、ホコリ取りの際にも火山灰が舞うのに注意してください。",
+    "頻繁に窓を開ける場所は1日に何度も掃除しましょう。",
+    "ブラシ付きの床掃除機、換気扇、衣類乾燥機は使用しないでください。",
+    "外で着た服は着替えて体をきれいに洗いましょう。",
+    "収集した火山灰は、しっかりしたビニール袋に入れて指定された場所に捨てましょう。",
+    "ゴーグルとマスクを着用し、室内外や車を素早く掃除しましょう。",
+  ],
+  자동차_운전: [
+    "できるだけ運転は控えてください。",
+    "やむを得ない場合は、前照灯を点けてゆっくり運転してください。",
+    "ワイパー使用時はガラスの傷に注意し、洗浄液を十分に使いましょう。",
+    "エンジンオイル、オイルフィルター、エアフィルターを頻繁に交換してください。",
+    "車内、トランク、エンジンなどを丁寧に掃除してください。",
+    "空気吸入口や電子機器は掃除前に密封してください。",
+  ],
+  왜_화산재를_청소해야_할까: [
+    "火山灰は電子機器に侵入し、修理不可能な故障を引き起こす可能性があります。",
+    "粗い粒子が表面に傷をつけるので、洗浄液を使って優しく拭き取る必要があります。",
+    "乾燥した日には、風や車両の移動で火山灰が再び舞い上がり、健康に悪影響を及ぼします。",
+    "噴火後、数ヶ月から数年にわたり火山灰が再び舞うことがあるため、繰り返し掃除が必要です。",
+  ],
+  비상연락처: [
+    "緊急救助・救急: 119",
+    "気象庁（予報・相談）: 131（市外局番なし）",
+    "その他問い合わせ: 120 ダサンコール、水道 121、韓電 123 など",
+  ],
+};
+
+export const volcanoData_ch = {
+  화산재_낙하_대비: [
+    "准备防尘口罩和防护眼镜。",
+    "储备便携灯、手电筒、一些现金、3天的饮用水、燃料、毛毯、衣物等。",
+    "在车辆中准备应急用品，并准备收音机和电池。",
+    "带上药品和急救包，胶带和塑料薄膜（用于封窗缝隙），以及清洁工具。",
+  ],
+  화산재_낙하_중: [
+    "尽量待在室内。",
+    "不要戴隐形眼镜（有角膜损伤的风险）。",
+    "通过电视或收音机收听灾害广播。",
+    "如果在室外，立即躲进汽车或建筑物中。",
+    "用口罩、手帕或衣物遮住口鼻。",
+    "用湿毛巾封住门缝和通风口，窗户用胶带封住。",
+    "确保排水沟没有被火山灰堵塞。",
+    "慢性支气管炎或哮喘患者应避免外出。",
+    "收集雨水时，拆除连接管道。",
+    "食用蔬菜时，务必清洗干净。",
+    "使用火山灰可能被污染的水时，仅使用上层水。",
+  ],
+  화산재_낙하_후: [
+    "清洁时，注意不要让火山灰进入室内外机械、车辆或水系统。",
+    "关闭电源后再清洁家电。",
+    "火山灰应在适当时机用水清洁，但避免过度喷水（以免火山灰变硬）。",
+    "使用吸尘器清洁，并在清除灰尘时注意防止火山灰飞扬。",
+    "经常打开窗户的地方，需每天多次清洁。",
+    "避免使用带刷子的地板清洁机、排风扇和衣物干燥机。",
+    "在外穿的衣服换掉，彻底洗澡。",
+    "收集的火山灰要装入结实的塑料袋，并按照指定地点处理。",
+    "戴上护目镜和口罩，快速清洁室内外及车辆。",
+  ],
+  자동차_운전: [
+    "尽量避免驾驶。",
+    "如必须驾驶，请开启前大灯并慢速行驶。",
+    "使用雨刷时要小心不要划伤玻璃，使用足够的清洁液。",
+    "定期更换机油、油滤和空气滤清器。",
+    "彻底清洁车内、后备厢和引擎。",
+    "清洁前封住空气吸入口和电子部件。",
+  ],
+  왜_화산재를_청소해야_할까: [
+    "火山灰可能渗入电子设备，造成无法修复的故障。",
+    "粗糙的颗粒可能在表面留下划痕，因此需要使用清洁液温柔擦拭。",
+    "在干燥的日子里，火山灰可能被风或车辆移动吹到空中，对健康产生负面影响。",
+    "火山灰可能在喷发后数月甚至数年仍然飘扬，因此需要反复清洁。",
+  ],
+  비상연락처: [
+    "紧急救援/急救: 119",
+    "气象局（预报/咨询）: 131（无需区号）",
+    "其他咨询: 120 达善呼叫、水务: 121、韩国电力公司: 123等",
   ],
 };

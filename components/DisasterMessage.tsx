@@ -31,7 +31,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   maxMessages = 5,
   autoScrollInterval = 5000, // 5 seconds
 }) => {
-  const { t, effectiveLanguage } = useLanguage();
+  const { t, effectiveLanguage, language } = useLanguage();
   const [regionName, setRegionName] = useState<string>("");
   const [alerts, setAlerts] = useState<DisasterAlertItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -319,7 +319,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
 
             {/* DisasterShortInfo 컴포넌트 렌더링 */}
             <View style={styles.modalInfoContainer}>
-              <DisasterShortInfo alert={currentAlert} />
+              <DisasterShortInfo alert={currentAlert} language={language} />
             </View>
           </View>
         </View>
