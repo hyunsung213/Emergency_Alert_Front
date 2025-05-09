@@ -18,7 +18,7 @@ export default function Info() {
           source={require("../../assets/images/information.png")}
           style={styles.headerIcon}
         />
-        <Text style={styles.headerText}>행동요령</Text>
+        <Text style={styles.headerText}>{t("행동요령", "행동요령")}</Text>
       </View>
 
       {/* 두 개의 Picker를 Row로 정렬 */}
@@ -30,7 +30,7 @@ export default function Info() {
               source={require("../../assets/images/warning.png")}
               style={styles.icon}
             />
-            <Text style={styles.pickerLabel}>재난별</Text>
+            <Text style={styles.pickerLabel}>{t("재난별", "재난별")}</Text>
           </View>
           <View style={styles.pickerWrapper}>
             <Picker
@@ -64,7 +64,9 @@ export default function Info() {
               source={require("../../assets/images/security.png")}
               style={styles.icon}
             />
-            <Text style={styles.pickerLabel}>안전행동요령별</Text>
+            <Text style={styles.pickerLabel}>
+              {t("안전행동요령별", "안전행동요령별")}
+            </Text>
           </View>
           <View style={styles.pickerWrapper}>
             <Picker
@@ -75,28 +77,40 @@ export default function Info() {
               }}
               style={styles.picker}
             >
-              <Picker.Item label="가스안전 행동요령" value="gasSafety" />
-              <Picker.Item label="난방안전 행동요령" value="heatingSafety" />
+              <Picker.Item label={t("가스안전행동요령")} value="gasSafety" />
               <Picker.Item
-                label="단수안전 행동요령"
+                label={t("난방안전행동요령")}
+                value="heatingSafety"
+              />
+              <Picker.Item
+                label={t("단수안전행동요령")}
                 value="waterOutageSafety"
               />
               <Picker.Item
-                label="물놀이안전 행동요령"
+                label={t("물놀이안전행동요령")}
                 value="waterPlaySafety"
               />
               <Picker.Item
-                label="산행안전 행동요령"
+                label={t("산행안전행동요령")}
                 value="mountainHikingSafety"
               />
-              <Picker.Item label="승강장안전 행동요령" value="platformSafety" />
               <Picker.Item
-                label="식중독안전 행동요령"
+                label={t("승강장안전행동요령")}
+                value="platformSafety"
+              />
+              <Picker.Item
+                label={t("식중독안전행동요령")}
                 value="foodPoisoningSafety"
               />
-              <Picker.Item label="식품안전 행동요령" value="foodSafety" />
-              <Picker.Item label="자전거안전 행동요령" value="bicycleSafety" />
-              <Picker.Item label="전기안전 행동요령" value="electricalSafety" />
+              <Picker.Item label={t("식품안전행동요령")} value="foodSafety" />
+              <Picker.Item
+                label={t("자전거안전행동요령")}
+                value="bicycleSafety"
+              />
+              <Picker.Item
+                label={t("전기안전행동요령")}
+                value="electricalSafety"
+              />
             </Picker>
           </View>
         </View>
