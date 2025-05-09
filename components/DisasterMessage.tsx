@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    padding: 16,
+    padding: 6,
     elevation: 2, // Android shadow
     shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   },
   modalMessageContainer: {
     marginBottom: 16, // 메시지와 추가 정보 간격
-    padding: 10,
+    padding: 20,
     backgroundColor: "white",
     borderRadius: 8,
     elevation: 2, // Android shadow
