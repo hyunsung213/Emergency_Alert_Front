@@ -1412,7 +1412,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f9f9f9",
-    padding: 16,
   },
   pickerContainer: {
     backgroundColor: "#ffffff",
@@ -1433,7 +1432,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
     borderRadius: 8,
-    padding: 16,
     elevation: 2, // Android shadow
     shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },

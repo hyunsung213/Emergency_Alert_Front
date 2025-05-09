@@ -120,6 +120,37 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
 
         if (data && data.length > 0) {
           setAlerts(data);
+        } else {
+          // If no data for today, fetch data for yesterday and the day before yesterday
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          const dayBeforeYesterday = new Date();
+          dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+
+          const formatDate = (date: Date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}${month}${day}`;
+          };
+
+          const yesterdayStr = formatDate(yesterday);
+          const dayBeforeYesterdayStr = formatDate(dayBeforeYesterday);
+
+          const [fallbackDataYesterday, fallbackDataDayBeforeYesterday] =
+            await Promise.all([
+              getDisasterAlertsByRegion(regionName, yesterdayStr),
+              getDisasterAlertsByRegion(regionName, dayBeforeYesterdayStr),
+            ]);
+
+          const combinedAlerts = [
+            ...(fallbackDataYesterday || []),
+            ...(fallbackDataDayBeforeYesterday || []),
+          ];
+
+          if (combinedAlerts.length > 0) {
+            setAlerts(combinedAlerts);
+          }
         }
       } catch (error) {
         console.error(
@@ -159,7 +190,7 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
     }, autoScrollInterval);
 
     return () => clearInterval(interval);
-  }, [alerts.length, autoScrollInterval, translateX]);
+  }, [alerts.length, autoScrollInterval, translateX, modalVisible]);
 
   // Get emergency color based on alert level
   const getEmergencyColor = (level: string) => {
@@ -212,6 +243,8 @@ const DisasterMessage: React.FC<DisasterMessageProps> = ({
   }
 
   const currentAlert = alerts[currentIndex];
+  const currentAlertLocation = extractLocation(currentAlert.RCPTN_RGN_NM);
+  const currentAlertMessage = currentAlert.MSG_CN;
   const backgroundColor = getEmergencyColor(currentAlert.EMRG_STEP_NM);
   const iconName = getDisasterIcon(currentAlert.DST_SE_NM);
 
@@ -388,7 +421,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    padding: 16,
+    padding: 6,
     elevation: 2, // Android shadow
     shadowColor: "#000", // iOS shadow
     shadowOffset: { width: 0, height: 2 },
@@ -397,7 +430,7 @@ const styles = StyleSheet.create({
   },
   modalMessageContainer: {
     marginBottom: 16, // 메시지와 추가 정보 간격
-    padding: 10,
+    padding: 20,
     backgroundColor: "white",
     borderRadius: 8,
     elevation: 2, // Android shadow
