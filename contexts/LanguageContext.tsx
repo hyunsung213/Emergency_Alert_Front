@@ -1105,6 +1105,14 @@ const translations: Record<string, Record<string, string>> = {
     light: "Light",
 
     disasterInfo: "Disaster Information",
+
+    emergencyCall: "Emergency Call (119)",
+    emergencyCallConfirm: "Emergency Call",
+    emergencyCallMessage: "Do you want to make an emergency call to 119?",
+    call: "Call",
+    ok: "OK",
+    cannotMakeCall: "Cannot make phone call",
+    callError: "Error occurred while making the call",
   },
   ko: {
     languageName: "한국어",
@@ -1244,6 +1252,14 @@ const translations: Record<string, Record<string, string>> = {
     light: "약",
 
     disasterInfo: "재난 정보",
+
+    emergencyCall: "긴급 전화 (119)",
+    emergencyCallConfirm: "긴급 전화",
+    emergencyCallMessage: "119에 긴급 전화를 걸겠습니까?",
+    call: "전화",
+    ok: "확인",
+    cannotMakeCall: "전화를 걸 수 없습니다.",
+    callError: "전화 연결 중 오류가 발생했습니다.",
   },
   ja: {
     languageName: "日本語",
@@ -1382,6 +1398,13 @@ const translations: Record<string, Record<string, string>> = {
     light: "弱い",
 
     disasterInfo: "災害情報",
+    emergencyCall: "緊急通報 (119)",
+    emergencyCallConfirm: "緊急通報",
+    emergencyCallMessage: "119に緊急通報しますか？",
+    call: "通報",
+    ok: "OK",
+    cannotMakeCall: "通話できません",
+    callError: "通話中にエラーが発生しました",
   },
   zh: {
     languageName: "中文",
@@ -1520,6 +1543,14 @@ const translations: Record<string, Record<string, string>> = {
     light: "弱",
 
     disasterInfo: "灾害信息",
+
+    emergencyCall: "紧急电话 (119)",
+    emergencyCallConfirm: "紧急电话",
+    emergencyCallMessage: "您要拨打119紧急电话吗？",
+    call: "拨打",
+    ok: "确认",
+    cannotMakeCall: "无法拨打电话",
+    callError: "拨打电话时出错",
   },
 };
 
