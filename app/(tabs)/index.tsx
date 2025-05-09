@@ -28,7 +28,7 @@ export default function Home() {
         <DisasterMessage />
       </View>
 
-      {language === "ko" && (
+      {(language === "ko" || language === "auto") && (
         <>
           {/* Picker Section */}
           <View style={styles.pickerContainer}>

@@ -51,7 +51,8 @@ export async function getDisasterAlerts(params: DisasterAlertParams) {
 
   // Add optional parameters only if they are provided
   if (crtDt) queryParams.crtDt = crtDt;
-  if (rgnNm && rgnNm !== "전국") queryParams.rgnNm = rgnNm;
+  // if (rgnNm && rgnNm !== "전국") queryParams.rgnNm = rgnNm;
+  queryParams.rgnNm = "전국";
 
   try {
     // Use the external API URL directly with apiClient

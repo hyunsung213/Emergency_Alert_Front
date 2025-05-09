@@ -995,7 +995,7 @@ const translations: Record<string, Record<string, string>> = {
     loadingAlerts: "Loading disaster alerts...",
     errorSubtext: "Please restart the app or check your internet connection",
     noActiveAlerts: "No active disaster alerts",
-    noRegionalAlerts: "No active disaster alerts for the {region} region",
+    noRegionalAlerts: "No active disaster alerts for the region",
     noNationalAlerts: "No active nationwide disaster alerts",
     // Disaster types
     notification: "Disaster Alert",
@@ -1160,7 +1160,7 @@ const translations: Record<string, Record<string, string>> = {
     loadingAlerts: "재난 경보를 불러오는 중...",
     errorSubtext: "앱을 다시 시작하시거나 인터넷 연결을 확인해주세요.",
     noActiveAlerts: "현재 활성화된 재난 경보가 없습니다",
-    noRegionalAlerts: "{region} 지역에 활성화된 재난 경보가 없습니다.",
+    noRegionalAlerts: "지역에 활성화된 재난 경보가 없습니다.",
     noNationalAlerts: "전국에 활성화된 재난 경보가 없습니다.",
     // Disaster types
     notification: "재난 알림",
@@ -1489,7 +1489,7 @@ const translations: Record<string, Record<string, string>> = {
     loadingAlerts: "正在加载灾害警报...",
     errorSubtext: "请重新启动应用或检查您的互联网连接",
     noActiveAlerts: "目前没有活跃的灾害警报",
-    noRegionalAlerts: "{region}地区没有活跃的灾害警报",
+    noRegionalAlerts: "地区没有活跃的灾害警报",
     noNationalAlerts: "全国没有活跃的灾害警报",
     // Disaster types
     notification: "灾害警报",

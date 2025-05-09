@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     position: "absolute",
     right: "4%",
-    bottom: "10%",
+    bottom: "13%",
     zIndex: 1000,
   },
   emergencyCallButton: {
