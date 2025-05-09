@@ -1034,6 +1034,8 @@ const translations: Record<string, Record<string, string>> = {
     비상사태: "State of Emergency",
     민방공: "Civil Defense",
     기타: "Other",
+    행동요령: "Guidelines",
+
     // Emergency levels
     안전안내: "Safety Information",
     긴급재난: "Urgent Disaster",
@@ -1179,6 +1181,8 @@ const translations: Record<string, Record<string, string>> = {
     안전: "안전",
     알림: "알림",
     주의: "주의",
+    행동요령: "행동 요령",
+
     // Region picker translations
     전체: "전체",
     selectRegion: "지역 선택",

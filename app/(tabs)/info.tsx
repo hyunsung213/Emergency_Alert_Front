@@ -6,7 +6,7 @@ import SafetyInfo from "@/components/SafetyInfo";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Info() {
-  const { language } = useLanguage();
+  const { t, effectiveLanguage, language } = useLanguage();
   const [emergency, setEmergency] = useState<string>("earthquake");
   const [safety, setSafety] = useState<string>("gasSafety");
   const [select, setSelect] = useState<Number>(0);
@@ -41,18 +41,18 @@ export default function Info() {
               }}
               style={styles.picker}
             >
-              <Picker.Item label="지진" value="earthquake" />
-              <Picker.Item label="미세먼지 • 황사" value="dust" />
-              <Picker.Item label="폭염" value="heat" />
-              <Picker.Item label="태풍" value="typhoon" />
-              <Picker.Item label="호우" value="downpour" />
-              <Picker.Item label="강풍" value="windstorm" />
-              <Picker.Item label="홍수" value="flood" />
-              <Picker.Item label="산사태" value="landslide" />
-              <Picker.Item label="가뭄" value="drought" />
-              <Picker.Item label="대설" value="snowstorm" />
-              <Picker.Item label="한파" value="cold" />
-              <Picker.Item label="화산폭발" value="volcano" />
+              <Picker.Item label={t("지진")} value="earthquake" />
+              <Picker.Item label={t("미세먼지")} value="dust" />
+              <Picker.Item label={t("폭염")} value="heat" />
+              <Picker.Item label={t("태풍")} value="typhoon" />
+              <Picker.Item label={t("호우")} value="downpour" />
+              <Picker.Item label={t("강풍")} value="windstorm" />
+              <Picker.Item label={t("홍수")} value="flood" />
+              <Picker.Item label={t("산사태")} value="landslide" />
+              <Picker.Item label={t("가뭄")} value="drought" />
+              <Picker.Item label={t("대설")} value="snowstorm" />
+              <Picker.Item label={t("한파")} value="cold" />
+              <Picker.Item label={t("화산폭발")} value="volcano" />
             </Picker>
           </View>
         </View>
