@@ -72,7 +72,7 @@ export default function SafetyInfo({
     <>
       {safety === "gasSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="가스시설 설치 요령"
@@ -221,7 +221,7 @@ export default function SafetyInfo({
 
       {safety === "heatingSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="보일러 안전 사용법"
@@ -305,7 +305,7 @@ export default function SafetyInfo({
       )}
       {safety === "waterOutageSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="단수 대비 요령"
@@ -373,7 +373,7 @@ export default function SafetyInfo({
       )}
       {safety === "waterPlaySafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="물놀이 전 준비사항"
@@ -457,7 +457,7 @@ export default function SafetyInfo({
       )}
       {safety === "mountainHikingSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="산행 전 준비사항"
@@ -542,7 +542,7 @@ export default function SafetyInfo({
 
       {safety === "platformSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="승강장 일반 이용 수칙"
@@ -611,7 +611,7 @@ export default function SafetyInfo({
 
       {safety === "foodPoisoningSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="식중독 예방 3대 요령"
@@ -744,7 +744,7 @@ export default function SafetyInfo({
 
       {safety === "foodSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="식품 보관 요령"
@@ -812,7 +812,7 @@ export default function SafetyInfo({
       )}
       {safety === "bicycleSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="일반인 자전거 이용 수칙"
@@ -928,7 +928,7 @@ export default function SafetyInfo({
       )}
       {safety === "electricalSafety" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="전기사고 예방 수칙"

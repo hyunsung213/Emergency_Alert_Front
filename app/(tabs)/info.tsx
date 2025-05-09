@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   pickerLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#333",
   },

@@ -85,7 +85,7 @@ export default function DisasterInfo({
     <>
       {emergency === "earthquake" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="지진 대비 행동요령"
@@ -268,7 +268,7 @@ export default function DisasterInfo({
 
       {emergency === "dust" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="미세먼지 일반 대비"
@@ -389,7 +389,7 @@ export default function DisasterInfo({
 
       {emergency === "heat" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="폭염 대비 요령"
@@ -459,7 +459,7 @@ export default function DisasterInfo({
 
       {emergency === "typhoon" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection title="태풍·호우 대비" items={typhoonData_ko.대비} />
               <InfoSection
@@ -551,7 +551,7 @@ export default function DisasterInfo({
 
       {emergency === "downpour" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="호우 대비 요령"
@@ -649,7 +649,7 @@ export default function DisasterInfo({
 
       {emergency === "windstorm" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="강풍 대비 요령"
@@ -750,7 +750,7 @@ export default function DisasterInfo({
 
       {emergency === "flood" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="홍수 대비 요령"
@@ -861,7 +861,7 @@ export default function DisasterInfo({
 
       {emergency === "landslide" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="사고 대비 요령"
@@ -962,7 +962,7 @@ export default function DisasterInfo({
 
       {emergency === "drought" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="주방 및 세탁 시 물 절약"
@@ -1025,7 +1025,7 @@ export default function DisasterInfo({
 
       {emergency === "snowstorm" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="대설 대비 요령"
@@ -1145,7 +1145,7 @@ export default function DisasterInfo({
 
       {emergency === "cold" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="한파 대비 요령"
@@ -1280,7 +1280,7 @@ export default function DisasterInfo({
 
       {emergency === "volcano" && (
         <ScrollView>
-          {language === "ko" && (
+          {(language === "ko" || language === "auto") && (
             <>
               <InfoSection
                 title="화산재 낙하 대비 요령"
